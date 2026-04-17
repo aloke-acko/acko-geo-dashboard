@@ -1,10 +1,12 @@
 """
-ACKO GEO Dashboard Generator
-Calls Ahrefs Brand Radar API, processes data, generates HTML dashboard.
+ACKO GMC AI Visibility Dashboard Generator
+Calls Ahrefs Brand Radar API, processes data, generates HTML dashboard + email summary.
 Runs weekly via GitHub Actions.
 """
-import requests, json, os, sys
+import requests, json, os, sys, smtplib
 from datetime import datetime, timedelta
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # ─── CONFIG ───
 API_KEY = os.environ.get("AHREFS_API_KEY", "")
@@ -63,7 +65,7 @@ domains_raw = api("brand-radar/cited-domains", {"select": "domain,responses", "l
 cited_domains = domains_raw.get("domains", [])
 
 print("Pulling cited pages...")
-pages_raw = api("brand-radar/cited-pages", {"select": "url,responses", "limit": "30", "date": today})
+pages_raw = api("brand-radar/cited-pages", {"select": "url,responses", "limit": "200", "date": today})
 acko_pages = [p for p in pages_raw.get("pages", []) if "acko.com" in p["url"]]
 
 print("Pulling AI responses...")
@@ -198,7 +200,7 @@ for q in wins:
 
 html = f'''<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ACKO GEO Dashboard</title>
+<title>ACKO GMC AI Visibility Dashboard</title>
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
 body{{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#e0e6ed;min-height:100vh}}
@@ -230,7 +232,7 @@ tr:hover td{{background:#0f1629}}
 @media(max-width:600px){{.krow{{grid-template-columns:repeat(2,1fr)}}}}
 </style></head><body>
 <div class="hdr">
-<h1><b>ACKO</b> GEO Dashboard — Brand Radar</h1>
+<h1><b>ACKO</b> GMC AI Visibility Dashboard</h1>
 <div class="m">Report: <b>{REPORT_ID[:8]}</b> · Source: <b>ChatGPT</b> · Updated: <b>{today}</b> · Prompts: <b>{total_q} tracked</b></div>
 </div>
 <div class="wrap">
@@ -242,11 +244,6 @@ tr:hover td{{background:#0f1629}}
 <div class="kpi o"><div class="l">Total AI Search Volume</div><div class="v">{total_volume:,}</div><div class="s">Across {total_q} tracked prompts</div></div>
 <div class="kpi p"><div class="l">ACKO Volume Reach</div><div class="v">{acko_volume:,}</div><div class="s">{acko_volume/total_volume*100:.0f}% of total volume</div></div>
 <div class="kpi r"><div class="l">Top Competitor</div><div class="v">{top_competitor["brand"]}</div><div class="s">{top_competitor["sov"]}% SoV</div></div>
-</div>
-
-<div class="fw">
-<h3>ACKO SoV Trend</h3>
-<div style="display:flex;align-items:flex-end;gap:16px;justify-content:center;padding:16px 0;min-height:160px">{trend_bars}</div>
 </div>
 
 <div class="g2">
@@ -293,3 +290,117 @@ with open("index.html", "w") as f:
 print(f"Dashboard generated: index.html ({len(html):,} bytes)")
 print(f"Date: {today}")
 print(f"Prompts: {total_q}, ACKO SoV: {acko_sov}%")
+
+# ─── GENERATE EMAIL SUMMARY ───
+dashboard_url = os.environ.get("DASHBOARD_URL", "https://aloke-acko.github.io/acko-geo-dashboard/")
+
+# Week-over-week comparison
+prev_week_sov = None
+if len(dates_sorted) >= 2:
+    prev_date = dates_sorted[0]
+    prev_week_sov = sov_history.get(prev_date, {}).get("Acko", None)
+
+sov_change = ""
+if prev_week_sov is not None and prev_week_sov > 0:
+    diff = acko_sov - prev_week_sov
+    arrow = "▲" if diff > 0 else "▼" if diff < 0 else "→"
+    sov_change = f" ({arrow} {diff:+.1f}pp vs last week)"
+
+# Top 5 gaps
+top_gaps = [q for q in questions if not q["m"] and not q["c"] and q["vol"] > 0][:5]
+gap_lines = ""
+for g in top_gaps:
+    gap_lines += f'<li>{g["q"]} <span style="color:#f59e0b">({g["vol"]:,} vol)</span></li>'
+
+# Top 5 wins
+top_wins = [q for q in questions if q["m"] and q["c"]][:5]
+win_lines = ""
+for w in top_wins:
+    win_lines += f'<li>{w["q"]} <span style="color:#10b981">({w["vol"]:,} vol)</span></li>'
+
+email_html = f"""
+<div style="font-family:'Segoe UI',Arial,sans-serif;max-width:640px;margin:0 auto;background:#0a0e1a;color:#e0e6ed;padding:24px;border-radius:12px">
+  <h1 style="font-size:20px;color:#6c63ff;margin-bottom:4px">ACKO GMC AI Visibility — Weekly Summary</h1>
+  <p style="color:#8892a4;font-size:13px;margin-bottom:20px">{today} · {total_q} tracked prompts · Source: ChatGPT</p>
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+    <tr>
+      <td style="background:#111827;border:1px solid #1e2a4a;border-radius:8px;padding:14px;text-align:center;width:33%">
+        <div style="font-size:11px;color:#8892a4;text-transform:uppercase">Share of Voice</div>
+        <div style="font-size:26px;font-weight:800;color:#6c63ff">{acko_sov}%</div>
+        <div style="font-size:11px;color:#8892a4">Rank #{acko_rank}{sov_change}</div>
+      </td>
+      <td style="background:#111827;border:1px solid #1e2a4a;border-radius:8px;padding:14px;text-align:center;width:33%">
+        <div style="font-size:11px;color:#8892a4;text-transform:uppercase">Mentioned In</div>
+        <div style="font-size:26px;font-weight:800;color:#10b981">{acko_mentioned_count}/{total_q}</div>
+        <div style="font-size:11px;color:#8892a4">{acko_mentioned_count/total_q*100:.0f}% of responses</div>
+      </td>
+      <td style="background:#111827;border:1px solid #1e2a4a;border-radius:8px;padding:14px;text-align:center;width:33%">
+        <div style="font-size:11px;color:#8892a4;text-transform:uppercase">Cited In</div>
+        <div style="font-size:26px;font-weight:800;color:#06b6d4">{acko_cited_count}/{total_q}</div>
+        <div style="font-size:11px;color:#8892a4">{acko_cited_count/total_q*100:.0f}% of responses</div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#111827;border:1px solid #1e2a4a;border-radius:8px;padding:14px;margin-bottom:16px">
+    <h3 style="font-size:13px;color:#ef4444;margin-bottom:8px">Top Gaps — ACKO Missing (High Volume)</h3>
+    <ol style="font-size:12px;color:#e0e6ed;padding-left:20px;line-height:1.8">{gap_lines if gap_lines else '<li style="color:#8892a4">No gaps found — great coverage!</li>'}</ol>
+  </div>
+
+  <div style="background:#111827;border:1px solid #1e2a4a;border-radius:8px;padding:14px;margin-bottom:16px">
+    <h3 style="font-size:13px;color:#10b981;margin-bottom:8px">Top Wins — ACKO Mentioned + Cited</h3>
+    <ol style="font-size:12px;color:#e0e6ed;padding-left:20px;line-height:1.8">{win_lines if win_lines else '<li style="color:#8892a4">No wins yet — keep optimising!</li>'}</ol>
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <a href="{dashboard_url}" style="display:inline-block;background:#6c63ff;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600">View Full Dashboard →</a>
+  </div>
+
+  <p style="text-align:center;font-size:11px;color:#6b7280;margin-top:16px">Auto-generated by ACKO GEO Dashboard · Powered by Ahrefs Brand Radar</p>
+</div>
+"""
+
+with open("email_summary.html", "w") as f:
+    f.write(email_html)
+
+print(f"Email summary generated: email_summary.html")
+
+# ─── SEND EMAIL (if SMTP configured) ───
+SMTP_HOST = os.environ.get("SMTP_HOST", "")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
+EMAIL_TO = os.environ.get("EMAIL_TO", "")
+
+if SMTP_HOST and SMTP_USER and SMTP_PASS and EMAIL_TO:
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"ACKO AI Visibility Report — {today} | SoV {acko_sov}% (#{acko_rank})"
+        msg["From"] = SMTP_USER
+        msg["To"] = EMAIL_TO
+
+        # Plain text fallback
+        plain = f"""ACKO GMC AI Visibility — Weekly Summary ({today})
+
+SoV: {acko_sov}% (Rank #{acko_rank}){sov_change}
+Mentioned: {acko_mentioned_count}/{total_q} ({acko_mentioned_count/total_q*100:.0f}%)
+Cited: {acko_cited_count}/{total_q} ({acko_cited_count/total_q*100:.0f}%)
+Volume Reach: {acko_volume:,} / {total_volume:,}
+
+Dashboard: {dashboard_url}
+"""
+        msg.attach(MIMEText(plain, "plain"))
+        msg.attach(MIMEText(email_html, "html"))
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            recipients = [e.strip() for e in EMAIL_TO.split(",")]
+            server.sendmail(SMTP_USER, recipients, msg.as_string())
+
+        print(f"Email sent to: {EMAIL_TO}")
+    except Exception as e:
+        print(f"Email sending failed: {e}")
+else:
+    print("SMTP not configured — skipping email")
