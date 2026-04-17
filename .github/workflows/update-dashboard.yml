@@ -25,9 +25,15 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Generate dashboard
+      - name: Generate dashboard and send email
         env:
           AHREFS_API_KEY: ${{ secrets.AHREFS_API_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          DASHBOARD_URL: "https://aloke-acko.github.io/acko-geo-dashboard/"
         run: python generate_dashboard.py
 
       - name: Commit and push
