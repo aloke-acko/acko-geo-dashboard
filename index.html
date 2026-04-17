@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ACKO GEO Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#e0e6ed;min-height:100vh}
+.hdr{background:linear-gradient(135deg,#0f1629,#1a2342);padding:20px 28px;border-bottom:1px solid #1e2a4a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.hdr h1{font-size:20px;font-weight:700;color:#fff}.hdr h1 b{color:#6c63ff}
+.hdr .m{font-size:12px;color:#8892a4}.hdr .m b{color:#6c63ff}
+.wrap{max-width:1400px;margin:0 auto;padding:20px}
+.krow{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:24px}
+.kpi{background:#111827;border:1px solid #1e2a4a;border-radius:10px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.g::before{background:#10b981}.kpi.b::before{background:#6c63ff}.kpi.o::before{background:#f59e0b}.kpi.r::before{background:#ef4444}.kpi.p::before{background:#8b5cf6}.kpi.c::before{background:#06b6d4}
+.kpi .v{font-size:28px;font-weight:800;margin:6px 0 2px}.kpi .l{font-size:10px;color:#8892a4;text-transform:uppercase;letter-spacing:.8px}.kpi .s{font-size:11px;color:#6b7280;margin-top:2px}
+.kpi.g .v{color:#10b981}.kpi.b .v{color:#6c63ff}.kpi.o .v{color:#f59e0b}.kpi.r .v{color:#ef4444}.kpi.p .v{color:#8b5cf6}.kpi.c .v{color:#06b6d4}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.card{background:#111827;border:1px solid #1e2a4a;border-radius:10px;padding:16px}
+.card h3{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px}
+.fw{background:#111827;border:1px solid #1e2a4a;border-radius:10px;padding:16px;margin-bottom:24px}
+.fw h3{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px;background:#0f1629;color:#8892a4;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #1e2a4a;position:sticky;top:0}
+td{padding:8px;border-bottom:1px solid #141c2e}
+tr:hover td{background:#0f1629}
+.scr{max-height:500px;overflow-y:auto;border-radius:6px}
+.scr::-webkit-scrollbar{width:5px}.scr::-webkit-scrollbar-track{background:#0a0e1a}.scr::-webkit-scrollbar-thumb{background:#2d3748;border-radius:3px}
+.fr{display:flex;gap:10px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.fr select,.fr input{background:#0f1629;border:1px solid #1e2a4a;color:#e0e6ed;padding:7px 10px;border-radius:6px;font-size:12px;outline:none}
+.fr select:focus,.fr input:focus{border-color:#6c63ff}.fr label{font-size:11px;color:#8892a4}
+@media(max-width:1100px){.krow{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr}}
+@media(max-width:600px){.krow{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<div class="hdr">
+<h1><b>ACKO</b> GEO Dashboard — Brand Radar</h1>
+<div class="m">Report: <b>019c2715</b> · Source: <b>ChatGPT</b> · Updated: <b>2026-04-17</b> · Prompts: <b>97 tracked</b></div>
+</div>
+<div class="wrap">
+
+<div class="krow">
+<div class="kpi b"><div class="l">ACKO Share of Voice</div><div class="v">50.3%</div><div class="s">Rank #5 of 17 brands</div></div>
+<div class="kpi g"><div class="l">ACKO Mentioned In</div><div class="v">24/97</div><div class="s">25% of AI responses</div></div>
+<div class="kpi c"><div class="l">ACKO Cited In</div><div class="v">45/97</div><div class="s">acko.com linked in 46% responses</div></div>
+<div class="kpi o"><div class="l">Total AI Search Volume</div><div class="v">65,839</div><div class="s">Across 97 tracked prompts</div></div>
+<div class="kpi p"><div class="l">ACKO Volume Reach</div><div class="v">16,745</div><div class="s">25% of total volume</div></div>
+<div class="kpi r"><div class="l">Top Competitor</div><div class="v">Tata AIG</div><div class="s">84.0% SoV</div></div>
+</div>
+
+<div class="fw">
+<h3>ACKO SoV Trend</h3>
+<div style="display:flex;align-items:flex-end;gap:16px;justify-content:center;padding:16px 0;min-height:160px"><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:28px;height:11px;background:#6c63ff;border-radius:4px 4px 0 0;opacity:0.8"></div><span style="font-size:10px;color:#8892a4">04-15</span><span style="font-size:11px;color:#6c63ff;font-weight:600">4.5%</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:28px;height:112px;background:#6c63ff;border-radius:4px 4px 0 0;opacity:0.8"></div><span style="font-size:10px;color:#8892a4">04-16</span><span style="font-size:11px;color:#6c63ff;font-weight:600">46.8%</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:28px;height:120px;background:#6c63ff;border-radius:4px 4px 0 0;opacity:0.8"></div><span style="font-size:10px;color:#8892a4">04-17</span><span style="font-size:11px;color:#6c63ff;font-weight:600">50.3%</span></div></div>
+</div>
+
+<div class="g2">
+<div class="card"><h3>Share of Voice — All Brands</h3><div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Tata AIG</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:84.0%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">84.0%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">pazcare</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:68.7%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">68.7%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">PolicyBazaar</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:53.7%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">53.7%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">policybazaar</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:53.7%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">53.7%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#6c63ff;font-weight:700">Acko</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:50.3%;background:#6c63ff;border:1px solid #6c63ff;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">50.3%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">plumhq</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:47.8%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">47.8%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">onsurity</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:40.4%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">40.4%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">ICICI Lombard</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:34.1%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">34.1%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">niva bupa</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:27.4%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">27.4%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">star health</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:15.7%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">15.7%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">InsuranceDekho</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:9.0%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">9.0%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">HDFC ERGO</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:6.4%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">6.4%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Bajaj Allianz</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:6.2%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">6.2%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">care health</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:3.5%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">3.5%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">GoDigit</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:0.8%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">0.8%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">manipal cigna</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:0.0%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">0.0%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">ekincare</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:0.0%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">0.0%</span>
+</div></div>
+<div class="card"><h3>Brand Mentions in AI Responses</h3><div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Pazcare</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:100.0%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">43/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Plum</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:95.3%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">41/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Tata AIG</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:69.8%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">30/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#6c63ff;font-weight:700">Acko</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:55.8%;background:#6c63ff;border:1px solid #6c63ff;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">24/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">PolicyBazaar</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:37.2%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">16/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">ICICI Lombard</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:30.2%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">13/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">HDFC ERGO</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:30.2%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">13/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Onsurity</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:25.6%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">11/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Star Health</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:25.6%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">11/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Niva Bupa</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:20.9%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">9/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Bajaj Allianz</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:18.6%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">8/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">Care Health</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:16.3%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">7/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">InsuranceDekho</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:4.7%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">2/97</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
+<span style="min-width:140px;font-size:13px;color:#e0e6ed">GoDigit</span>
+<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
+<div style="width:2.3%;background:#1e2a4a;border:1px solid #2d3a5c;height:100%;border-radius:4px;transition:width .3s"></div>
+</div>
+<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">1/97</span>
+</div></div>
+</div>
+
+<div class="g2">
+<div class="card"><h3>Top 20 Cited Domains</h3><div class="scr"><table><thead><tr><th>#</th><th>Domain</th><th>Responses</th></tr></thead><tbody><tr style=""><td style="color:#8892a4;padding:8px">1</td>
+<td style="padding:8px;color:#e0e6ed">www.tataaig.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:100%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">73</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">2</td>
+<td style="padding:8px;color:#e0e6ed">www.pazcare.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:86%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">63</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">3</td>
+<td style="padding:8px;color:#e0e6ed">www.plumhq.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:79%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">58</span></div></td></tr><tr style="background:#0f1629;"><td style="color:#8892a4;padding:8px">4</td>
+<td style="padding:8px;color:#6c63ff;font-weight:700">www.acko.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:62%;height:6px;background:#6c63ff;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">45</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">5</td>
+<td style="padding:8px;color:#e0e6ed">www.policybazaar.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:53%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">39</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">6</td>
+<td style="padding:8px;color:#e0e6ed">securenow.in</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:49%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">36</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">7</td>
+<td style="padding:8px;color:#e0e6ed">www.onsurity.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:48%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">35</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">8</td>
+<td style="padding:8px;color:#e0e6ed">joinditto.in</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:47%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">34</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">9</td>
+<td style="padding:8px;color:#e0e6ed">www.nivabupa.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:37%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">27</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">10</td>
+<td style="padding:8px;color:#e0e6ed">www.plancover.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:33%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">24</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">11</td>
+<td style="padding:8px;color:#e0e6ed">www.qian.co.in</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:30%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">22</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">12</td>
+<td style="padding:8px;color:#e0e6ed">insuropedia.in</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:27%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">20</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">13</td>
+<td style="padding:8px;color:#e0e6ed">www.indusindinsurance.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:26%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">19</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">14</td>
+<td style="padding:8px;color:#e0e6ed">www.sbigeneral.in</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:23%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">17</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">15</td>
+<td style="padding:8px;color:#e0e6ed">www.bimakavach.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:22%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">16</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">16</td>
+<td style="padding:8px;color:#e0e6ed">www.wisemonk.io</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:21%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">15</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">17</td>
+<td style="padding:8px;color:#e0e6ed">www.policyx.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:21%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">15</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">18</td>
+<td style="padding:8px;color:#e0e6ed">www.indiafirstlife.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:21%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">15</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">19</td>
+<td style="padding:8px;color:#e0e6ed">tropogo.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:19%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">14</span></div></td></tr><tr style=""><td style="color:#8892a4;padding:8px">20</td>
+<td style="padding:8px;color:#e0e6ed">www.icicilombard.com</td>
+<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
+<div style="width:19%;height:6px;background:#2d3a5c;border-radius:3px;min-width:2px"></div>
+<span style="font-size:12px;color:#8892a4">14</span></div></td></tr></tbody></table></div></div>
+<div class="card">
+<h3>ACKO Cited Pages</h3><div class="scr"><table><thead><tr><th>URL</th><th>Responses</th></tr></thead><tbody><tr><td style="padding:8px;color:#6c63ff;font-size:12px">www.acko.com/insurance/group-insurance/</td><td style="padding:8px;color:#f59e0b;font-weight:600">18</td></tr><tr><td style="padding:8px;color:#6c63ff;font-size:12px">www.acko.com/group-health-insurance/pros-cons/</td><td style="padding:8px;color:#f59e0b;font-weight:600">6</td></tr></tbody></table></div>
+<h3 style="margin-top:20px">SoV History by Date</h3><div class="scr" style="max-height:300px"><table><thead><tr><th style='text-align:left;padding:8px;background:#0f1629;color:#8892a4;font-size:11px;border-bottom:1px solid #1e2a4a'>Brand</th><th style='text-align:right;padding:8px;background:#0f1629;color:#8892a4;font-size:11px;border-bottom:1px solid #1e2a4a'>04-15</th><th style='text-align:right;padding:8px;background:#0f1629;color:#8892a4;font-size:11px;border-bottom:1px solid #1e2a4a'>04-16</th><th style='text-align:right;padding:8px;background:#0f1629;color:#8892a4;font-size:11px;border-bottom:1px solid #1e2a4a'>04-17</th></tr></thead><tbody><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>Tata AIG</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>100.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>91.3%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>84.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>pazcare</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>85.1%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>75.5%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>68.7%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>PolicyBazaar</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>95.5%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>56.6%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>53.7%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>policybazaar</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>95.5%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>56.6%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>53.7%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#6c63ff;font-weight:700;font-size:12px'>Acko</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>4.5%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>46.8%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>50.3%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>plumhq</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.8%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>45.2%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>47.8%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>ICICI Lombard</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>95.5%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>36.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>34.1%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>InsuranceDekho</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>3.7%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>4.4%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>9.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>Bajaj Allianz</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>19.2%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>7.4%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>GoDigit</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>4.9%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>HDFC ERGO</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>24.4%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>7.6%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>care health</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>7.1%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>4.2%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>ekincare</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>manipal cigna</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>niva bupa</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>118.7%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>32.7%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>onsurity</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>218.7%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>48.3%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr><tr style='border-bottom:1px solid #141c2e'><td style='padding:8px;color:#e0e6ed;font-size:12px'>star health</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>79.0%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>18.8%</td><td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>0.0%</td></tr></tbody></table></div>
+</div>
+</div>
+
+<div class="fw">
+<h3>Prompt-Level Breakdown — All 97 Tracked Prompts</h3>
+<div class="fr">
+<label>Filter:</label>
+<select id="flt" onchange="ft()"><option value="all">All Prompts</option><option value="m">ACKO Mentioned</option><option value="nm">ACKO NOT Mentioned</option><option value="c">ACKO Cited</option><option value="nc">ACKO NOT Cited</option></select>
+<input type="text" id="src" placeholder="Search prompts..." oninput="ft()" style="width:260px">
+<label id="rc" style="margin-left:auto;color:#6c63ff"></label>
+</div>
+<div class="scr" style="max-height:600px"><table><thead><tr><th>#</th><th>Prompt</th><th>AI Vol</th><th>Mentioned</th><th>Cited</th><th>Brands</th></tr></thead><tbody id="pt"></tbody></table></div>
+</div>
+
+<div class="g2">
+<div class="card"><h3 style="color:#ef4444">High-Volume Gaps — ACKO Missing</h3><div class="scr"><table><thead><tr><th>Prompt</th><th>AI Vol</th><th>Brands Present</th></tr></thead><tbody><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What is GIPSA in Group Health Insurance?</td><td style="padding:8px;color:#f59e0b;font-weight:600">9,214</td><td style="padding:8px;color:#6b7280;font-size:11px"></td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What is group medical insurance and how does it work in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">2,157</td><td style="padding:8px;color:#6b7280;font-size:11px">Niva Bupa, InsuranceDekho</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">How much does group mediclaim policy cost per employee in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,629</td><td style="padding:8px;color:#6b7280;font-size:11px">Pazcare</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Is group insurance policy premium tax deductible for employers in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,413</td><td style="padding:8px;color:#6b7280;font-size:11px">PolicyBazaar, Pazcare</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Is group insurance scheme premium tax deductible for employers in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,413</td><td style="padding:8px;color:#6b7280;font-size:11px">PolicyBazaar</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Is group medical insurance premium tax deductible for employers in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,413</td><td style="padding:8px;color:#6b7280;font-size:11px">PolicyBazaar</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Is group health insurance policy premium tax deductible for employers in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,413</td><td style="padding:8px;color:#6b7280;font-size:11px">PolicyBazaar, Pazcare</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">How to buy group insurance scheme for a company in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px">Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Plum, Onsurity</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What does group insurance scheme cover and what are common exclusions?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px">Pazcare</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">group insurance scheme claim process explained step by step</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px">Tata AIG, Pazcare</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What is group insurance scheme and how does it work in India?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px">Plum</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What are the advantages and disadvantages of group insurance scheme?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px"></td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">group insurance scheme for 10 to 50 employees: what should employers know?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px">Tata AIG, Pazcare, Plum</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What are the benefits of group insurance scheme for employees?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px">Plum</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">How to compare group insurance scheme policies for a growing company?</td><td style="padding:8px;color:#f59e0b;font-weight:600">1,120</td><td style="padding:8px;color:#6b7280;font-size:11px"></td></tr></tbody></table></div></div>
+<div class="card"><h3 style="color:#10b981">ACKO Wins — Mentioned + Cited</h3><div class="scr"><table><thead><tr><th>Prompt</th><th>AI Vol</th></tr></thead><tbody><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">How are group health insurance premiums calculated?</td><td style="padding:8px;color:#10b981;font-weight:600">6,371</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Who Is Eligible for Group Health Insurance?</td><td style="padding:8px;color:#10b981;font-weight:600">2,157</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Who Are Eligible For Group Health Insurance?</td><td style="padding:8px;color:#10b981;font-weight:600">2,157</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">How does group insurance scheme work for employers in India?</td><td style="padding:8px;color:#10b981;font-weight:600">1,120</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Types Of Group Insurance Plans In India</td><td style="padding:8px;color:#10b981;font-weight:600">708</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What are the advantages and disadvantages of group medical insurance?</td><td style="padding:8px;color:#10b981;font-weight:600">530</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">What are the advantages and disadvantages of group health insurance policy?</td><td style="padding:8px;color:#10b981;font-weight:600">530</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Advantages Of Group Health Insurance</td><td style="padding:8px;color:#10b981;font-weight:600">404</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Pros and cons of group health insurance policy</td><td style="padding:8px;color:#10b981;font-weight:600">404</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Benefits of Group Accident Insurance</td><td style="padding:8px;color:#10b981;font-weight:600">326</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Types of group mediclaim policy plans available in India</td><td style="padding:8px;color:#10b981;font-weight:600">266</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Types of group medical insurance plans available in India</td><td style="padding:8px;color:#10b981;font-weight:600">266</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Types of group insurance scheme plans available in India</td><td style="padding:8px;color:#10b981;font-weight:600">266</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Types of group health insurance policy plans available in India</td><td style="padding:8px;color:#10b981;font-weight:600">266</td></tr><tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">Is Pre-Existing Disease Covered by Group Health Insurance?</td><td style="padding:8px;color:#10b981;font-weight:600">135</td></tr></tbody></table></div></div>
+</div>
+
+</div>
+<script>
+const Q=[{"q": "What is GIPSA in Group Health Insurance?", "vol": 9214, "m": false, "c": false, "b": "", "bc": 0}, {"q": "How are group health insurance premiums calculated?", "vol": 6371, "m": true, "c": true, "b": "Acko, Tata AIG, Onsurity", "bc": 3}, {"q": "What is group medical insurance and how does it work in India?", "vol": 2157, "m": false, "c": true, "b": "Niva Bupa, InsuranceDekho", "bc": 2}, {"q": "Who Is Eligible for Group Health Insurance?", "vol": 2157, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "Who Are Eligible For Group Health Insurance?", "vol": 2157, "m": true, "c": true, "b": "Acko, PolicyBazaar, Plum, Onsurity", "bc": 4}, {"q": "How much does group mediclaim policy cost per employee in India?", "vol": 1629, "m": false, "c": false, "b": "Pazcare", "bc": 1}, {"q": "Is group insurance policy premium tax deductible for employers in India?", "vol": 1413, "m": false, "c": false, "b": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "Is group insurance scheme premium tax deductible for employers in India?", "vol": 1413, "m": false, "c": true, "b": "PolicyBazaar", "bc": 1}, {"q": "Is group medical insurance premium tax deductible for employers in India?", "vol": 1413, "m": false, "c": false, "b": "PolicyBazaar", "bc": 1}, {"q": "Is group health insurance policy premium tax deductible for employers in India?", "vol": 1413, "m": false, "c": false, "b": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "How to buy group insurance scheme for a company in India?", "vol": 1120, "m": false, "c": false, "b": "Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Plum, Onsurity", "bc": 6}, {"q": "How does group insurance scheme work for employers in India?", "vol": 1120, "m": true, "c": true, "b": "Acko, Plum", "bc": 2}, {"q": "What does group insurance scheme cover and what are common exclusions?", "vol": 1120, "m": false, "c": true, "b": "Pazcare", "bc": 1}, {"q": "group insurance scheme claim process explained step by step", "vol": 1120, "m": false, "c": false, "b": "Tata AIG, Pazcare", "bc": 2}, {"q": "What is group insurance scheme and how does it work in India?", "vol": 1120, "m": false, "c": true, "b": "Plum", "bc": 1}, {"q": "What are the advantages and disadvantages of group insurance scheme?", "vol": 1120, "m": false, "c": true, "b": "", "bc": 0}, {"q": "group insurance scheme for 10 to 50 employees: what should employers know?", "vol": 1120, "m": false, "c": true, "b": "Tata AIG, Pazcare, Plum", "bc": 3}, {"q": "What are the benefits of group insurance scheme for employees?", "vol": 1120, "m": false, "c": false, "b": "Plum", "bc": 1}, {"q": "How to compare group insurance scheme policies for a growing company?", "vol": 1120, "m": false, "c": true, "b": "", "bc": 0}, {"q": "What is PPN in Group Health Insurance?", "vol": 1120, "m": false, "c": false, "b": "PolicyBazaar", "bc": 1}, {"q": "What is group insurance policy and how does it work in India?", "vol": 1102, "m": false, "c": true, "b": "Plum", "bc": 1}, {"q": "What does group insurance policy cover and what are common exclusions?", "vol": 1102, "m": false, "c": true, "b": "Pazcare, Plum, Onsurity", "bc": 3}, {"q": "What is group health insurance policy and how does it work in India?", "vol": 1058, "m": false, "c": true, "b": "Plum", "bc": 1}, {"q": "How to Cancel Your Group Health Insurance Policy?", "vol": 1058, "m": false, "c": false, "b": "PolicyBazaar, Plum", "bc": 2}, {"q": "What does group health insurance policy cover and what are common exclusions?", "vol": 1058, "m": false, "c": false, "b": "Pazcare", "bc": 1}, {"q": "How does group mediclaim policy work for employers in India?", "vol": 872, "m": false, "c": false, "b": "Bajaj Allianz, Pazcare, Plum", "bc": 3}, {"q": "What does group mediclaim policy cover and what are common exclusions?", "vol": 872, "m": false, "c": false, "b": "", "bc": 0}, {"q": "What is Corporate Insurance and its Benefits Explained?", "vol": 839, "m": false, "c": false, "b": "Tata AIG, Plum", "bc": 2}, {"q": "What is Waiting Period in Group Insurance: Full Guide?", "vol": 785, "m": false, "c": false, "b": "Tata AIG, PolicyBazaar", "bc": 2}, {"q": "How To Compare Group Health Insurance?", "vol": 720, "m": false, "c": true, "b": "Pazcare, Plum", "bc": 2}, {"q": "Types of group insurance policy plans available in India", "vol": 708, "m": false, "c": true, "b": "", "bc": 0}, {"q": "Types Of Group Insurance Plans In India", "vol": 708, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "How to buy group mediclaim policy for a company in India?", "vol": 541, "m": false, "c": false, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Pazcare, Plum", "bc": 5}, {"q": "group mediclaim policy for startups in India: how to choose the right plan?", "vol": 541, "m": false, "c": false, "b": "Pazcare, Plum", "bc": 2}, {"q": "Best group medical insurance providers for Indian companies", "vol": 539, "m": false, "c": false, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 9}, {"q": "Best group mediclaim policy providers for Indian companies", "vol": 539, "m": false, "c": false, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 9}, {"q": "What are the benefits of group health insurance policy for employees?", "vol": 530, "m": false, "c": true, "b": "Tata AIG, Onsurity, GoDigit, InsuranceDekho", "bc": 4}, {"q": "What is group health insurance?", "vol": 530, "m": false, "c": false, "b": "", "bc": 0}, {"q": "What does group medical insurance cover and what are common exclusions?", "vol": 530, "m": false, "c": false, "b": "Pazcare, Onsurity", "bc": 2}, {"q": "What are the advantages and disadvantages of group medical insurance?", "vol": 530, "m": true, "c": true, "b": "Acko, Plum", "bc": 2}, {"q": "What are the benefits of group health insurance?", "vol": 530, "m": false, "c": true, "b": "Tata AIG", "bc": 1}, {"q": "What are the advantages and disadvantages of group health insurance policy?", "vol": 530, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "What is AYUSH treatment in group health insurance?", "vol": 458, "m": false, "c": false, "b": "Pazcare", "bc": 1}, {"q": "Best group health insurance policy providers for Indian companies", "vol": 412, "m": false, "c": false, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Plum, Niva Bupa, Care Health", "bc": 8}, {"q": "What are the advantages and disadvantages of group mediclaim policy?", "vol": 404, "m": false, "c": false, "b": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "Advantages Of Group Health Insurance", "vol": 404, "m": true, "c": true, "b": "Acko, Tata AIG", "bc": 2}, {"q": "Pros and cons of group health insurance policy", "vol": 404, "m": true, "c": true, "b": "Acko, Tata AIG", "bc": 2}, {"q": "Best group insurance scheme providers for Indian companies", "vol": 357, "m": false, "c": false, "b": "Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 10}, {"q": "group insurance policy for 10 to 50 employees: what should employers know?", "vol": 326, "m": false, "c": true, "b": "Plum", "bc": 1}, {"q": "What are the benefits of group insurance policy for employees?", "vol": 326, "m": false, "c": true, "b": "Onsurity", "bc": 1}, {"q": "Benefits of Group Accident Insurance", "vol": 326, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "How to Choose the Best Group Insurance for Employees?", "vol": 326, "m": false, "c": true, "b": "Onsurity", "bc": 1}, {"q": "What are the advantages and disadvantages of group insurance policy?", "vol": 326, "m": false, "c": false, "b": "", "bc": 0}, {"q": "Types of group mediclaim policy plans available in India", "vol": 266, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "Types of group medical insurance plans available in India", "vol": 266, "m": true, "c": true, "b": "Acko, Pazcare", "bc": 2}, {"q": "Types of group insurance scheme plans available in India", "vol": 266, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "Types of group health insurance policy plans available in India", "vol": 266, "m": true, "c": true, "b": "Acko", "bc": 1}, {"q": "What are the best group mediclaim policies that cover employees and their families?", "vol": 208, "m": true, "c": false, "b": "Acko, Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Niva Bupa, Care Health", "bc": 9}, {"q": "What are the benefits of group mediclaim policy for employees?", "vol": 208, "m": false, "c": false, "b": "Pazcare", "bc": 1}, {"q": "Types of group health Insurance - Guide to understand GMC", "vol": 208, "m": false, "c": false, "b": "Tata AIG, Pazcare", "bc": 2}, {"q": "What is Group Mediclaim for Employees and its Benefits?", "vol": 208, "m": false, "c": false, "b": "", "bc": 0}, {"q": "What is group mediclaim policy and how does it work in India?", "vol": 208, "m": false, "c": false, "b": "Pazcare, Plum", "bc": 2}, {"q": "What is the Co-Payment Clause in Group Health Insurance?", "vol": 190, "m": false, "c": false, "b": "Plum", "bc": 1}, {"q": "Is it Smart to Buy Top-up Health Plan with Group Insurance?", "vol": 188, "m": false, "c": false, "b": "Tata AIG, Star Health, Pazcare, Plum", "bc": 4}, {"q": "How to compare group health insurance policy policies for a growing company?", "vol": 152, "m": false, "c": false, "b": "Pazcare, Plum", "bc": 2}, {"q": "Best group insurance policy providers for Indian companies", "vol": 145, "m": false, "c": false, "b": "Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Onsurity, Niva Bupa, Care Health", "bc": 11}, {"q": "Is Pre-Existing Disease Covered by Group Health Insurance?", "vol": 135, "m": true, "c": true, "b": "Acko, PolicyBazaar, Pazcare", "bc": 3}, {"q": "Does group health insurance cover physiotherapy in India?", "vol": 132, "m": false, "c": false, "b": "Star Health", "bc": 1}, {"q": "Is IPD covered in group health insurance?", "vol": 126, "m": false, "c": false, "b": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "group health insurance policy for startups in India: how to choose the right plan?", "vol": 119, "m": true, "c": true, "b": "Acko, Tata AIG, Pazcare, Plum", "bc": 4}, {"q": "group insurance scheme for startups in India: how to choose the right plan?", "vol": 119, "m": true, "c": true, "b": "Acko, Pazcare", "bc": 2}, {"q": "group medical insurance for startups in India: how to choose the right plan?", "vol": 119, "m": true, "c": true, "b": "Acko, Tata AIG, Pazcare", "bc": 3}, {"q": "group mediclaim policy for 10 to 50 employees: what should employers know?", "vol": 117, "m": false, "c": false, "b": "Pazcare, Plum", "bc": 2}, {"q": "group insurance policy claim process explained step by step", "vol": 114, "m": false, "c": false, "b": "Tata AIG, Pazcare", "bc": 2}, {"q": "Best Group Health Insurance for your Employees", "vol": 98, "m": false, "c": false, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 9}, {"q": "group health insurance policy for 10 to 50 employees: what should employers know?", "vol": 96, "m": false, "c": false, "b": "Tata AIG, Plum", "bc": 2}, {"q": "group medical insurance for 10 to 50 employees: what should employers know?", "vol": 96, "m": false, "c": true, "b": "Pazcare", "bc": 1}, {"q": "How to buy group medical insurance for a company in India?", "vol": 86, "m": false, "c": false, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Pazcare, Plum", "bc": 5}, {"q": "How To Buy Health Insurance Policy For Employees In India?", "vol": 86, "m": true, "c": true, "b": "Acko, Plum", "bc": 2}, {"q": "How to compare group insurance policy policies for a growing company?", "vol": 84, "m": false, "c": true, "b": "", "bc": 0}, {"q": "How to buy group health insurance policy for a company in India?", "vol": 64, "m": true, "c": true, "b": "Acko, ICICI Lombard, HDFC ERGO, Star Health, Pazcare, Plum, Onsurity", "bc": 7}, {"q": "How does group medical insurance work for employers in India?", "vol": 64, "m": false, "c": true, "b": "Tata AIG, ICICI Lombard, HDFC ERGO, Plum", "bc": 4}, {"q": "How much does group health insurance policy cost per employee in India?", "vol": 64, "m": false, "c": false, "b": "Plum", "bc": 1}, {"q": "How does group insurance policy work for employers in India?", "vol": 64, "m": true, "c": true, "b": "Acko, Plum", "bc": 2}, {"q": "How much does group insurance policy cost per employee in India?", "vol": 64, "m": false, "c": false, "b": "Plum", "bc": 1}, {"q": "How does group health insurance policy work for employers in India?", "vol": 64, "m": false, "c": false, "b": "Plum", "bc": 1}, {"q": "How much does group insurance scheme cost per employee in India?", "vol": 64, "m": false, "c": true, "b": "Plum", "bc": 1}, {"q": "How much does group medical insurance cost per employee in India?", "vol": 64, "m": false, "c": false, "b": "Plum, Onsurity", "bc": 2}, {"q": "Difference between group insurance and ESI", "vol": 42, "m": false, "c": false, "b": "Pazcare, Plum", "bc": 2}, {"q": "What Are GMC and GPA Insurance Policy?", "vol": 34, "m": false, "c": false, "b": "Tata AIG", "bc": 1}, {"q": "Does Group Insurance Cover Pre Existing Disease?", "vol": 31, "m": true, "c": true, "b": "Acko, PolicyBazaar, Pazcare", "bc": 3}, {"q": "group insurance policy for startups in India: how to choose the right plan?", "vol": 29, "m": true, "c": true, "b": "Acko, Tata AIG, Pazcare", "bc": 3}, {"q": "How to compare group medical insurance policies for a growing company?", "vol": 27, "m": false, "c": true, "b": "Niva Bupa", "bc": 1}, {"q": "group health insurance policy claim process explained step by step", "vol": 15, "m": false, "c": false, "b": "Tata AIG, Pazcare", "bc": 2}, {"q": "group medical insurance claim process explained step by step", "vol": 15, "m": false, "c": false, "b": "Tata AIG, Pazcare", "bc": 2}, {"q": "How to buy group insurance policy for a company in India?", "vol": 0, "m": false, "c": false, "b": "PolicyBazaar, ICICI Lombard, HDFC ERGO, Star Health", "bc": 4}, {"q": "Is cancer covered in corporate health insurance in India?", "vol": 0, "m": false, "c": false, "b": "Pazcare", "bc": 1}];
+function bd(v,g,b){return v?'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:'+g+'">YES</span>':'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:'+b+'">NO</span>';}
+function rn(d){const t=document.getElementById('pt');t.innerHTML='';d.forEach((q,i)=>{t.innerHTML+='<tr><td style="color:#8892a4">'+(i+1)+'</td><td style="color:#e0e6ed;max-width:400px">'+q.q+'</td><td style="color:#f59e0b;font-weight:600">'+(q.vol>0?q.vol.toLocaleString():'-')+'</td><td>'+bd(q.m,'#064e3b','#450a0a')+'</td><td>'+bd(q.c,'#064e3b','#450a0a')+'</td><td style="color:#6b7280;font-size:11px">'+q.b+'</td></tr>';});document.getElementById('rc').textContent=d.length+' prompts';}
+function ft(){let f=document.getElementById('flt').value,s=document.getElementById('src').value.toLowerCase(),d=Q;if(f==='m')d=d.filter(q=>q.m);else if(f==='nm')d=d.filter(q=>!q.m);else if(f==='c')d=d.filter(q=>q.c);else if(f==='nc')d=d.filter(q=>!q.c);if(s)d=d.filter(q=>q.q.toLowerCase().includes(s));rn(d);}
+rn(Q);
+</script></body></html>
