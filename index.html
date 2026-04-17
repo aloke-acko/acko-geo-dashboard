@@ -161,15 +161,6 @@
             padding-bottom: 0.5rem;
             border-bottom: 2px solid #6c63ff;
         }
-        .info-banner {
-            background: #1e2a4a;
-            border-left: 3px solid #6c63ff;
-            padding: 1rem;
-            font-size: 0.85rem;
-            color: #9ca3af;
-            margin-bottom: 1rem;
-            border-radius: 0.25rem;
-        }
         .trend-mini {
             background: #111827;
             border: 1px solid #1e2a4a;
@@ -215,158 +206,149 @@
             font-size: 0.8rem;
             color: #9ca3af;
         }
+        .sov-table {
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
         .bar-chart {
-            background: #111827;
-            border: 1px solid #1e2a4a;
-            border-radius: 0.5rem;
-            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
         }
         .bar-row {
             display: flex;
             align-items: center;
-            margin-bottom: 1.2rem;
             gap: 1rem;
-        }
-        .bar-row:last-child {
-            margin-bottom: 0;
         }
         .bar-label {
             min-width: 140px;
-            text-align: right;
             font-size: 0.9rem;
+            font-weight: 500;
         }
         .bar-label.acko {
             color: #6c63ff;
             font-weight: 600;
         }
-        .bar-label strong {
-            color: #fff;
-        }
-        .bar-visual {
+        .bar-container {
             flex: 1;
-            height: 30px;
-            background: linear-gradient(90deg, #6c63ff 0%, #5a51e0 100%);
+            height: 28px;
+            background: #1e2a4a;
             border-radius: 0.25rem;
+            overflow: hidden;
             position: relative;
+        }
+        .bar {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 0.25rem;
+            transition: width 0.3s;
             display: flex;
             align-items: center;
-            padding-right: 0.75rem;
             justify-content: flex-end;
+            padding-right: 0.5rem;
         }
-        .bar-visual.comparison {
-            background: transparent;
-            border: 2px solid #9ca3af;
+        .bar.acko {
+            background: #6c63ff;
         }
         .bar-value {
-            font-size: 0.85rem;
-            font-weight: 600;
             color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
         .table-wrapper {
             background: #111827;
             border: 1px solid #1e2a4a;
             border-radius: 0.5rem;
-            overflow: hidden;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
         }
-        th {
+        thead {
+            position: sticky;
+            top: 0;
             background: #1e2a4a;
+        }
+        th {
             padding: 1rem;
             text-align: left;
-            font-weight: 600;
-            border-bottom: 1px solid #374151;
             color: #9ca3af;
+            font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             letter-spacing: 0.05em;
+            border-bottom: 1px solid #374151;
         }
         td {
             padding: 0.8rem 1rem;
             border-bottom: 1px solid #1e2a4a;
-            color: #e5e7eb;
-        }
-        tr:last-child td {
-            border-bottom: none;
         }
         tr:hover {
-            background: rgba(108, 99, 255, 0.05);
+            background: #1e2a4a;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-yes {
+            background: #10b981;
+            color: #fff;
+        }
+        .badge-no {
+            background: #ef4444;
+            color: #fff;
         }
         .controls {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
         .controls select,
         .controls input {
-            padding: 0.5rem 0.75rem;
+            padding: 0.75rem;
             background: #1e2a4a;
             border: 1px solid #374151;
             border-radius: 0.5rem;
             color: #e5e7eb;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
-        .competitor-grid {
+        .controls input::placeholder {
+            color: #6b7280;
+        }
+        .gap-panels {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
-        .competitor-card {
-            background: #111827;
-            border: 1px solid #1e2a4a;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-        }
-        .competitor-card .name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.75rem;
-        }
-        .competitor-card .sov {
-            font-size: 0.9rem;
+        .volume-badge {
+            display: inline-block;
+            background: #374151;
             color: #9ca3af;
-            margin-bottom: 0.5rem;
-        }
-        .competitor-card .mentions {
-            font-size: 0.9rem;
-            color: #9ca3af;
-            margin-bottom: 0.5rem;
-        }
-        .competitor-card .without-acko {
-            font-size: 0.9rem;
-            color: #ef4444;
-            font-weight: 600;
-        }
-        .table-subheader {
-            background: #1e2a4a;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #6c63ff;
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid #374151;
-            font-weight: 600;
-        }
-        .table-subheader td {
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
         }
         @media (max-width: 1024px) {
-            .kpi-grid {
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            .gap-panels {
+                grid-template-columns: 1fr;
             }
-            .bar-row {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .controls-bar {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-            .bar-label {
-                min-width: unset;
             }
         }
         @media (max-width: 640px) {
@@ -390,16 +372,13 @@
             .trend-bars {
                 flex-direction: row;
             }
-            .competitor-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>ACKO GMC AI Visibility Dashboard</h1>
-        <p>Generative Engine Optimisation | Data Source: ChatGPT | 88 Tracked Prompts</p>
+        <p>Generative Engine Optimisation | Data Source: ChatGPT | 88 Tracked Prompts | Report ID: BR-20260417</p>
     </div>
 
     <div class="container">
@@ -477,7 +456,63 @@
         <!-- SECTION 2: BRAND MENTIONS -->
         <div class="section">
             <h2 class="section-title">Brand Mentions in AI Responses</h2>
-            <div class="bar-chart" id="mentionsChart">
+            <div class="bar-chart">
+                <div class="bar-row">
+                    <div class="bar-label">Pazcare</div>
+                    <div class="bar-container"><div class="bar" style="width: 100%"><span class="bar-value">37</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Plum</div>
+                    <div class="bar-container"><div class="bar" style="width: 100%"><span class="bar-value">37</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Tata AIG</div>
+                    <div class="bar-container"><div class="bar" style="width: 70.3%"><span class="bar-value">26</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label acko">Acko</div>
+                    <div class="bar-container"><div class="bar acko" style="width: 59.5%"><span class="bar-value">22</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">PolicyBazaar</div>
+                    <div class="bar-container"><div class="bar" style="width: 43.2%"><span class="bar-value">16</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">ICICI Lombard</div>
+                    <div class="bar-container"><div class="bar" style="width: 29.7%"><span class="bar-value">11</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">HDFC ERGO</div>
+                    <div class="bar-container"><div class="bar" style="width: 29.7%"><span class="bar-value">11</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Star Health</div>
+                    <div class="bar-container"><div class="bar" style="width: 24.3%"><span class="bar-value">9</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Onsurity</div>
+                    <div class="bar-container"><div class="bar" style="width: 24.3%"><span class="bar-value">9</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Bajaj Allianz</div>
+                    <div class="bar-container"><div class="bar" style="width: 16.2%"><span class="bar-value">6</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Niva Bupa</div>
+                    <div class="bar-container"><div class="bar" style="width: 16.2%"><span class="bar-value">6</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Care Health</div>
+                    <div class="bar-container"><div class="bar" style="width: 13.5%"><span class="bar-value">5</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">GoDigit</div>
+                    <div class="bar-container"><div class="bar" style="width: 2.7%"><span class="bar-value">1</span></div></div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">InsuranceDekho</div>
+                    <div class="bar-container"><div class="bar" style="width: 2.7%"><span class="bar-value">1</span></div></div>
+                </div>
             </div>
         </div>
 
@@ -498,9 +533,6 @@
                             <td><strong style="color: #6c63ff;">acko.com</strong></td>
                             <td><strong style="color: #6c63ff;">41</strong></td>
                             <td><div style="background: #6c63ff; height: 6px; width: 62.1%; border-radius: 2px;"></div></td>
-                        </tr>
-                        <tr style="background: #1a2332; cursor: default;">
-                            <td colspan="3" class="table-subheader">Configured Competitors</td>
                         </tr>
                         <tr>
                             <td>tataaig.com</td>
@@ -528,24 +560,6 @@
                             <td><div style="background: #3b82f6; height: 6px; width: 48.5%; border-radius: 2px;"></div></td>
                         </tr>
                         <tr>
-                            <td>nivabupa.com</td>
-                            <td>25</td>
-                            <td><div style="background: #3b82f6; height: 6px; width: 37.9%; border-radius: 2px;"></div></td>
-                        </tr>
-                        <tr>
-                            <td>icicilombard.com</td>
-                            <td>14</td>
-                            <td><div style="background: #3b82f6; height: 6px; width: 21.2%; border-radius: 2px;"></div></td>
-                        </tr>
-                        <tr>
-                            <td>starhealth.in</td>
-                            <td>12</td>
-                            <td><div style="background: #3b82f6; height: 6px; width: 18.2%; border-radius: 2px;"></div></td>
-                        </tr>
-                        <tr style="background: #1a2332; cursor: default;">
-                            <td colspan="3" class="table-subheader">Other Domains</td>
-                        </tr>
-                        <tr>
                             <td>securenow.in</td>
                             <td>32</td>
                             <td><div style="background: #3b82f6; height: 6px; width: 48.5%; border-radius: 2px;"></div></td>
@@ -554,6 +568,11 @@
                             <td>joinditto.in</td>
                             <td>31</td>
                             <td><div style="background: #3b82f6; height: 6px; width: 47.0%; border-radius: 2px;"></div></td>
+                        </tr>
+                        <tr>
+                            <td>nivabupa.com</td>
+                            <td>25</td>
+                            <td><div style="background: #3b82f6; height: 6px; width: 37.9%; border-radius: 2px;"></div></td>
                         </tr>
                         <tr>
                             <td>plancover.com</td>
@@ -591,9 +610,19 @@
                             <td><div style="background: #3b82f6; height: 6px; width: 21.2%; border-radius: 2px;"></div></td>
                         </tr>
                         <tr>
+                            <td>icicilombard.com</td>
+                            <td>14</td>
+                            <td><div style="background: #3b82f6; height: 6px; width: 21.2%; border-radius: 2px;"></div></td>
+                        </tr>
+                        <tr>
                             <td>policyx.com</td>
                             <td>14</td>
                             <td><div style="background: #3b82f6; height: 6px; width: 21.2%; border-radius: 2px;"></div></td>
+                        </tr>
+                        <tr>
+                            <td>starhealth.in</td>
+                            <td>12</td>
+                            <td><div style="background: #3b82f6; height: 6px; width: 18.2%; border-radius: 2px;"></div></td>
                         </tr>
                         <tr>
                             <td>tropogo.com</td>
@@ -605,47 +634,9 @@
             </div>
         </div>
 
-        <!-- SECTION 3B: COMPETITOR DEEP-DIVE -->
-        <div class="section">
-            <h2 class="section-title">Competitor Deep-Dive — Top 5</h2>
-            <div class="competitor-grid">
-                <div class="competitor-card">
-                    <div class="name">Tata AIG</div>
-                    <div class="sov">SoV: 83.4%</div>
-                    <div class="mentions">Mentioned in: 54 prompts</div>
-                    <div class="without-acko">Appears without ACKO in 40 prompts</div>
-                </div>
-                <div class="competitor-card">
-                    <div class="name">Pazcare</div>
-                    <div class="sov">SoV: 69.3%</div>
-                    <div class="mentions">Mentioned in: 43 prompts</div>
-                    <div class="without-acko">Appears without ACKO in 28 prompts</div>
-                </div>
-                <div class="competitor-card">
-                    <div class="name">Plum</div>
-                    <div class="sov">SoV: 47.7%</div>
-                    <div class="mentions">Mentioned in: 45 prompts</div>
-                    <div class="without-acko">Appears without ACKO in 25 prompts</div>
-                </div>
-                <div class="competitor-card">
-                    <div class="name">PolicyBazaar</div>
-                    <div class="sov">SoV: 53.9%</div>
-                    <div class="mentions">Mentioned in: 34 prompts</div>
-                    <div class="without-acko">Appears without ACKO in 18 prompts</div>
-                </div>
-                <div class="competitor-card">
-                    <div class="name">ICICI Lombard</div>
-                    <div class="sov">SoV: 34.3%</div>
-                    <div class="mentions">Mentioned in: 28 prompts</div>
-                    <div class="without-acko">Appears without ACKO in 15 prompts</div>
-                </div>
-            </div>
-        </div>
-
         <!-- SECTION 4: ACKO CITED PAGES -->
         <div class="section">
             <h2 class="section-title">ACKO Cited Pages</h2>
-            <div class="info-banner">ACKO is cited in 41 AI responses. Due to API pagination limits, only partial page-level URLs were captured. Full breakdown will be available after the next data refresh.</div>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -663,14 +654,6 @@
                             <td><strong style="color: #6c63ff;">acko.com/group-health-insurance/pros-cons/</strong></td>
                             <td style="color: #6c63ff;"><strong>6</strong></td>
                         </tr>
-                        <tr style="background: rgba(108, 99, 255, 0.1);">
-                            <td><strong style="color: #6c63ff;">acko.com/group-health-insurance/how-are-group-health-insurance-premiums-calculated/</strong></td>
-                            <td style="color: #6c63ff;"><strong>3</strong></td>
-                        </tr>
-                        <tr style="background: rgba(108, 99, 255, 0.1);">
-                            <td><strong style="color: #6c63ff;">Other ACKO pages (API limit — full list pending)</strong></td>
-                            <td style="color: #6c63ff;"><strong>16</strong></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -686,8 +669,6 @@
                     <option value="notMentioned">ACKO Not Mentioned</option>
                     <option value="cited">ACKO Cited</option>
                     <option value="notCited">ACKO Not Cited</option>
-                    <option value="gaps">High Volume Gaps</option>
-                    <option value="wins">ACKO Wins</option>
                 </select>
                 <input type="text" id="searchInput" placeholder="Search prompts...">
             </div>
@@ -711,22 +692,40 @@
         <!-- SECTION 6: GAP ANALYSIS -->
         <div class="section">
             <h2 class="section-title">Gap Analysis</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 350px;">Prompt (High Search Volume)</th>
-                            <th style="width: 100px;">Monthly Vol</th>
-                            <th style="width: 80px;">ACKO Mentioned</th>
-                            <th style="width: 80px;">ACKO Cited</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gapTableBody">
-                    </tbody>
-                </table>
+            <div class="gap-panels">
+                <div>
+                    <h3 style="color: #ef4444; margin-bottom: 1rem; font-size: 1rem;">High-Volume Gaps — ACKO Missing</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Prompt</th>
+                                    <th style="width: 80px;">AI Vol</th>
+                                    <th style="width: 150px;">Brands Present</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gapsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: #10b981; margin-bottom: 1rem; font-size: 1rem;">ACKO Wins — Mentioned + Cited</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Prompt</th>
+                                    <th style="width: 80px;">AI Vol</th>
+                                </tr>
+                            </thead>
+                            <tbody id="winsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -852,208 +851,171 @@ function getDateLabel(date) {
   return d.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
 }
 
-function getSovData(date) {
-  return SOV_HISTORY[date] || {};
+function getSoVRank(date) {
+  const data = SOV_HISTORY[date];
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  return sorted.findIndex(e => e[0] === "Acko") + 1;
 }
 
-function computeRank(brand, date) {
-  const data = getSovData(date);
-  const values = Object.entries(data).sort((a,b) => b[1] - a[1]);
-  return values.findIndex(([name]) => name === brand) + 1;
+function getTopCompetitor(date) {
+  const data = SOV_HISTORY[date];
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  return {name: sorted[0][0], value: sorted[0][1].toFixed(1)};
 }
 
-function buildSovChart(date, containerId) {
-  const data = getSovData(date);
-  const container = document.getElementById(containerId);
-  const maxValue = Math.max(...Object.values(data));
-  
-  let html = '';
-  const sorted = Object.entries(data).sort((a,b) => b[1] - a[1]);
-  
-  sorted.forEach(([brand, value]) => {
-    const width = (value / maxValue) * 100;
-    const isAcko = brand === 'Acko';
-    const classes = isAcko ? 'bar-label acko' : 'bar-label';
-    
-    html += `
-    <div class="bar-row">
-      <div class="${classes}"><strong>${brand}</strong></div>
-      <div class="bar-visual" style="width: ${width}%; background: linear-gradient(90deg, ${isAcko ? '#6c63ff' : '#3b82f6'} 0%, ${isAcko ? '#5a51e0' : '#2563eb'} 100%);">
-        <span class="bar-value">${value.toFixed(1)}%</span>
+function renderSoVChart(date) {
+  const data = SOV_HISTORY[date];
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  const maxVal = sorted[0][1];
+
+  const chart = document.getElementById('sovBarChart');
+  chart.innerHTML = sorted.map(([brand, val]) => {
+    const pct = (val / maxVal) * 100;
+    const isAcko = brand === "Acko";
+    return `
+      <div class="bar-row">
+        <div class="bar-label ${isAcko ? 'acko' : ''}">${brand}</div>
+        <div class="bar-container"><div class="bar ${isAcko ? 'acko' : ''}" style="width: ${pct}%"><span class="bar-value">${val.toFixed(1)}%</span></div></div>
       </div>
-    </div>
     `;
-  });
-  
-  container.innerHTML = html;
+  }).join('');
+
+  document.getElementById('sovChartTitle').textContent = `Share of Voice — All Brands (${getDateLabel(date)})`;
 }
 
-function buildMentionsChart() {
-  const container = document.getElementById('mentionsChart');
-  const data = {};
-  
-  QUESTIONS.forEach(q => {
-    const brands = q.brands.split(', ');
-    brands.forEach(brand => {
-      if (!data[brand]) data[brand] = 0;
-      if (q.mentioned) data[brand]++;
-    });
-  });
-  
-  const maxValue = Math.max(...Object.values(data));
-  let html = '';
-  const sorted = Object.entries(data).sort((a,b) => b[1] - a[1]);
-  
-  sorted.forEach(([brand, count]) => {
-    const width = (count / maxValue) * 100;
-    const isAcko = brand === 'Acko';
-    const classes = isAcko ? 'bar-label acko' : 'bar-label';
-    
-    html += `
-    <div class="bar-row">
-      <div class="${classes}"><strong>${brand}</strong></div>
-      <div class="bar-visual" style="width: ${width}%; background: linear-gradient(90deg, ${isAcko ? '#6c63ff' : '#3b82f6'} 0%, ${isAcko ? '#5a51e0' : '#2563eb'} 100%);">
-        <span class="bar-value">${count}</span>
-      </div>
-    </div>
-    `;
-  });
-  
-  container.innerHTML = html;
-}
+function renderSoVTable() {}
+function updateTrendHighlight() {}
 
-function buildPromptsTable(filterValue = 'all', searchTerm = '') {
-  const tbody = document.getElementById('promptsTableBody');
-  let filtered = QUESTIONS;
-  
-  if (filterValue === 'mentioned') {
-    filtered = filtered.filter(q => q.mentioned);
-  } else if (filterValue === 'notMentioned') {
-    filtered = filtered.filter(q => !q.mentioned);
-  } else if (filterValue === 'cited') {
-    filtered = filtered.filter(q => q.cited);
-  } else if (filterValue === 'notCited') {
-    filtered = filtered.filter(q => !q.cited);
-  } else if (filterValue === 'gaps') {
-    filtered = filtered.filter(q => !q.mentioned && !q.cited);
-  } else if (filterValue === 'wins') {
-    filtered = filtered.filter(q => q.mentioned && q.cited);
+function calculateDelta(current, previous) {
+  const diff = current - previous;
+  const pct = ((diff / previous) * 100).toFixed(1);
+  const pp = diff.toFixed(1);
+
+  if (diff > 0) {
+    return `▲ +${pp}pp`;
+  } else if (diff < 0) {
+    return `▼ ${pp}pp`;
+  } else {
+    return '→ 0pp';
   }
-  
-  if (searchTerm) {
-    filtered = filtered.filter(q => q.q.toLowerCase().includes(searchTerm.toLowerCase()));
-  }
-  
-  let html = '';
-  filtered.forEach(q => {
-    const mentionedBadge = q.mentioned ? '<span style="background: #10b981; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">Yes</span>' : '<span style="background: #6b7280; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">No</span>';
-    const citedBadge = q.cited ? '<span style="background: #6c63ff; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">Yes</span>' : '<span style="background: #6b7280; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">No</span>';
-    
-    html += `
-    <tr>
-      <td>${q.q}</td>
-      <td>${q.vol.toLocaleString()}</td>
-      <td>${mentionedBadge}</td>
-      <td>${citedBadge}</td>
-      <td style="font-size: 0.85rem; color: #9ca3af;">${q.brands}</td>
-    </tr>
-    `;
-  });
-  
-  tbody.innerHTML = html;
 }
 
-function buildGapTable() {
-  const tbody = document.getElementById('gapTableBody');
-  const gapQuestions = QUESTIONS.filter(q => !q.mentioned && !q.cited && q.vol > 0).sort((a,b) => b.vol - a.vol);
-  
-  let html = '';
-  gapQuestions.forEach(q => {
-    html += `
-    <tr>
-      <td>${q.q}</td>
-      <td>${q.vol.toLocaleString()}</td>
-      <td><span style="background: #6b7280; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">No</span></td>
-      <td><span style="background: #6b7280; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">No</span></td>
-    </tr>
-    `;
-  });
-  
-  tbody.innerHTML = html;
+function updateKPIs() {
+  const ackoSoV = SOV_HISTORY[currentDate]["Acko"];
+  const rank = getSoVRank(currentDate);
+  const topComp = getTopCompetitor(currentDate);
+
+  document.getElementById('kpiSoV').textContent = ackoSoV.toFixed(1) + '%';
+  document.getElementById('kpiSoVRank').textContent = `Rank #${rank} of 14 brands`;
+  document.getElementById('kpiTopCompetitor').textContent = topComp.name;
+  document.getElementById('kpiTopCompetitorValue').textContent = topComp.value + '% SoV';
+
+  const deltaEl = document.getElementById('kpiSoVDelta');
+  if (isComparing && compareDate) {
+    const compareSoV = SOV_HISTORY[compareDate]["Acko"];
+    const deltaTxt = calculateDelta(ackoSoV, compareSoV);
+    deltaEl.textContent = deltaTxt;
+    deltaEl.className = 'delta ' + (ackoSoV > compareSoV ? 'up' : ackoSoV < compareSoV ? 'down' : '');
+    deltaEl.style.display = 'block';
+  } else {
+    deltaEl.style.display = 'none';
+  }
+}
+
+function updateHeaderStatus() {
+  const status = document.getElementById('headerStatus');
+  if (isComparing && compareDate) {
+    status.textContent = `Comparing ${getDateLabel(currentDate)} vs ${getDateLabel(compareDate)}`;
+  } else {
+    status.textContent = `Viewing: ${getDateLabel(currentDate)}`;
+  }
 }
 
 function updateDashboard() {
-  buildSovChart(currentDate, 'sovBarChart');
-  buildMentionsChart();
-  buildPromptsTable();
-  buildGapTable();
-  
-  document.getElementById('sovChartTitle').textContent = `Share of Voice — All Brands (${getDateLabel(currentDate)})`;
-  const ackoSov = getSovData(currentDate)['Acko'];
-  const rank = computeRank('Acko', currentDate);
-  document.getElementById('kpiSoV').textContent = ackoSov.toFixed(1) + '%';
-  document.getElementById('kpiSoVRank').textContent = `Rank #${rank} of 14 brands`;
-  
-  const topCompetitor = Object.entries(getSovData(currentDate)).filter(([b]) => b !== 'Acko').sort((a,b) => b[1] - a[1])[0];
-  document.getElementById('kpiTopCompetitor').textContent = topCompetitor[0];
-  document.getElementById('kpiTopCompetitorValue').textContent = topCompetitor[1].toFixed(1) + '% SoV';
-  
-  if (isComparing && compareDate) {
-    const compareSov = getSovData(compareDate)['Acko'];
-    const diff = ackoSov - compareSov;
-    const deltaElement = document.getElementById('kpiSoVDelta');
-    if (diff > 0) {
-      deltaElement.textContent = '+' + diff.toFixed(1) + '% vs ' + getDateLabel(compareDate);
-      deltaElement.className = 'delta up';
-    } else if (diff < 0) {
-      deltaElement.textContent = diff.toFixed(1) + '% vs ' + getDateLabel(compareDate);
-      deltaElement.className = 'delta down';
-    } else {
-      deltaElement.textContent = 'No change vs ' + getDateLabel(compareDate);
-      deltaElement.className = 'delta';
-    }
-    deltaElement.style.display = 'block';
-  } else {
-    document.getElementById('kpiSoVDelta').style.display = 'none';
-  }
-  
-  const statusText = isComparing && compareDate
-    ? `Comparing: ${getDateLabel(currentDate)} vs ${getDateLabel(compareDate)}`
-    : `Viewing: ${getDateLabel(currentDate)}`;
-  document.getElementById('headerStatus').textContent = statusText;
+  renderSoVChart(currentDate);
+  renderSoVTable();
+  updateTrendHighlight();
+  updateKPIs();
+  updateHeaderStatus();
 }
 
-document.getElementById('compareToggle').addEventListener('change', function() {
-  const section = document.getElementById('comparePeriodSection');
-  if (this.checked) {
-    section.classList.add('active');
-  } else {
-    section.classList.remove('active');
-  }
-});
-
-document.getElementById('applyBtn').addEventListener('click', function() {
-  currentDate = document.getElementById('dateSelectA').value;
-  isComparing = document.getElementById('compareToggle').checked;
-  if (isComparing) {
-    compareDate = document.getElementById('dateSelectB').value;
-  } else {
+document.getElementById('compareToggle').addEventListener('change', (e) => {
+  isComparing = e.target.checked;
+  document.getElementById('comparePeriodSection').classList.toggle('active', isComparing);
+  if (!isComparing) {
     compareDate = null;
+  } else {
+    compareDate = document.getElementById('dateSelectB').value;
   }
   updateDashboard();
 });
 
-document.getElementById('filterSelect').addEventListener('change', function() {
-  const searchTerm = document.getElementById('searchInput').value;
-  buildPromptsTable(this.value, searchTerm);
+document.getElementById('applyBtn').addEventListener('click', () => {
+  currentDate = document.getElementById('dateSelectA').value;
+  if (isComparing) {
+    compareDate = document.getElementById('dateSelectB').value;
+  }
+  updateDashboard();
 });
 
-document.getElementById('searchInput').addEventListener('input', function() {
-  const filterValue = document.getElementById('filterSelect').value;
-  buildPromptsTable(filterValue, this.value);
+// Filter & Search
+let filteredData = [...QUESTIONS];
+
+document.getElementById('filterSelect').addEventListener('change', (e) => {
+    const filter = e.target.value;
+    filteredData = QUESTIONS.filter(item => {
+        if (filter === 'mentioned') return item.mentioned;
+        if (filter === 'notMentioned') return !item.mentioned;
+        if (filter === 'cited') return item.cited;
+        if (filter === 'notCited') return !item.cited;
+        return true;
+    });
+    applySearch();
 });
 
+document.getElementById('searchInput').addEventListener('input', applySearch);
+
+function applySearch() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const display = filteredData.filter(item => item.q.toLowerCase().includes(query));
+    renderPrompts(display);
+}
+
+function renderPrompts(data) {
+    const tbody = document.getElementById('promptsTableBody');
+    tbody.innerHTML = data.map(item => `
+        <tr>
+            <td style="font-size: 0.85rem;">${item.q.substring(0, 50)}...</td>
+            <td><span class="volume-badge">${item.vol}</span></td>
+            <td><span class="badge ${item.mentioned ? 'badge-yes' : 'badge-no'}">${item.mentioned ? 'YES' : 'NO'}</span></td>
+            <td><span class="badge ${item.cited ? 'badge-yes' : 'badge-no'}">${item.cited ? 'YES' : 'NO'}</span></td>
+            <td style="font-size: 0.8rem;">${item.brands}</td>
+        </tr>
+    `).join('');
+}
+
+// Gap Analysis
+const gaps = QUESTIONS.filter(q => !q.mentioned).sort((a, b) => b.vol - a.vol).slice(0, 15);
+const wins = QUESTIONS.filter(q => q.mentioned && q.cited).sort((a, b) => b.vol - a.vol).slice(0, 15);
+
+document.getElementById('gapsTableBody').innerHTML = gaps.map(item => `
+    <tr>
+        <td style="font-size: 0.85rem;">${item.q.substring(0, 40)}...</td>
+        <td><span class="volume-badge">${item.vol}</span></td>
+        <td style="font-size: 0.8rem;">${item.brands}</td>
+    </tr>
+`).join('');
+
+document.getElementById('winsTableBody').innerHTML = wins.map(item => `
+    <tr>
+        <td style="font-size: 0.85rem;">${item.q.substring(0, 40)}...</td>
+        <td><span class="volume-badge">${item.vol}</span></td>
+    </tr>
+`).join('');
+
+// Initial render
 updateDashboard();
+renderPrompts(QUESTIONS);
     </script>
 </body>
 </html>
