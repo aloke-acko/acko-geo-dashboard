@@ -114,175 +114,783 @@ brand_mentions_sorted = sorted(brand_text_mentions.items(), key=lambda x: -x[1])
 print(f"Processed: {total_q} prompts, ACKO SoV={acko_sov}%, mentioned in {acko_mentioned_count}")
 
 # ─── GENERATE HTML ───
-def bar_row(label, value, max_val, is_acko=False, suffix="%"):
-    pct = (value / max_val * 100) if max_val > 0 else 0
-    color = "#6c63ff" if is_acko else "#1e2a4a"
-    border = "#6c63ff" if is_acko else "#2d3a5c"
-    label_style = "color:#6c63ff;font-weight:700" if is_acko else "color:#e0e6ed"
-    return f'''<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #141c2e">
-<span style="min-width:140px;font-size:13px;{label_style}">{label}</span>
-<div style="flex:1;background:#0a0e1a;border-radius:4px;height:18px;overflow:hidden">
-<div style="width:{pct:.1f}%;background:{color};border:1px solid {border};height:100%;border-radius:4px;transition:width .3s"></div>
-</div>
-<span style="min-width:50px;text-align:right;font-size:13px;color:#8892a4">{value}{suffix}</span>
-</div>'''
 
-def badge(val, good_text="YES", bad_text="NO"):
-    if val:
-        return f'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#064e3b;color:#10b981">{good_text}</span>'
-    return f'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#450a0a;color:#ef4444">{bad_text}</span>'
+# Build date options for selects
+dates_sorted = sorted(sov_history.keys())
+date_options_a = "\n".join(
+    f'<option value="{d}" {"selected" if d == dates_sorted[-1] else ""}>{datetime.strptime(d, "%Y-%m-%d").strftime("%b %d, %Y")}</option>'
+    for d in dates_sorted
+)
+date_options_b = "\n".join(
+    f'<option value="{d}" {"selected" if d == dates_sorted[-2] and len(dates_sorted) > 1 else ""}>{datetime.strptime(d, "%Y-%m-%d").strftime("%b %d, %Y")}</option>'
+    for d in dates_sorted
+)
 
-# SoV bars
-sov_bars = "\n".join(bar_row(s["brand"], s["sov"], 100, s["brand"] == "Acko") for s in sov)
+# Brand mentions data for JS
+bm_data = json.dumps([{"brand": b, "count": c} for b, c in brand_mentions_sorted])
 
-# Brand mentions bars
-max_bm = brand_mentions_sorted[0][1] if brand_mentions_sorted else 1
-bm_bars = "\n".join(bar_row(b, c, max_bm, b == "Acko", suffix=f"/{total_q}") for b, c in brand_mentions_sorted)
+# Cited domains data for initial render (pin ACKO at top)
+acko_domain = None
+other_domains = []
+for d in cited_domains[:20]:
+    if "acko" in d["domain"]:
+        acko_domain = d
+    else:
+        other_domains.append(d)
 
-# Cited domains table
-domain_rows = ""
-for i, d in enumerate(cited_domains[:20]):
-    is_acko = "acko" in d["domain"]
-    max_d = cited_domains[0]["responses"]
+domain_table_rows = ""
+if acko_domain:
+    max_d = cited_domains[0]["responses"] if cited_domains else 1
+    pct = acko_domain["responses"] / max_d * 100
+    domain_table_rows += f'''<tr style="background: rgba(108, 99, 255, 0.1);">
+<td><strong style="color: #6c63ff;">{acko_domain["domain"]}</strong></td>
+<td style="width: 80px;"><strong style="color: #6c63ff;">{acko_domain["responses"]}</strong></td>
+<td style="flex: 1;"><div style="background: #6c63ff; height: 6px; width: {pct:.1f}%; border-radius: 2px;"></div></td>
+</tr>'''
+
+max_d = cited_domains[0]["responses"] if cited_domains else 1
+for d in other_domains[:19]:
     pct = d["responses"] / max_d * 100
-    hl = 'background:#0f1629;' if is_acko else ''
-    ds = 'color:#6c63ff;font-weight:700' if is_acko else 'color:#e0e6ed'
-    domain_rows += f'''<tr style="{hl}"><td style="color:#8892a4;padding:8px">{i+1}</td>
-<td style="padding:8px;{ds}">{d["domain"]}</td>
-<td style="padding:8px"><div style="display:flex;align-items:center;gap:8px">
-<div style="width:{pct:.0f}%;height:6px;background:{'#6c63ff' if is_acko else '#2d3a5c'};border-radius:3px;min-width:2px"></div>
-<span style="font-size:12px;color:#8892a4">{d["responses"]}</span></div></td></tr>'''
+    domain_table_rows += f'''<tr>
+<td>{d["domain"]}</td>
+<td style="width: 80px;">{d["responses"]}</td>
+<td style="flex: 1;"><div style="background: #3b82f6; height: 6px; width: {pct:.1f}%; border-radius: 2px;"></div></td>
+</tr>'''
 
 # ACKO pages table
 acko_page_rows = ""
 for p in acko_pages:
-    acko_page_rows += f'<tr><td style="padding:8px;color:#6c63ff;font-size:12px">{p["url"]}</td><td style="padding:8px;color:#f59e0b;font-weight:600">{p["responses"]}</td></tr>'
+    acko_page_rows += f'''<tr style="background: rgba(108, 99, 255, 0.1);">
+<td><strong style="color: #6c63ff;">{p["url"]}</strong></td>
+<td style="color: #6c63ff;"><strong>{p["responses"]}</strong></td>
+</tr>'''
 
-# Prompts table rows (generated in JS for filtering)
-questions_json = json.dumps(questions)
+# Questions JSON for filtering
+questions_json = json.dumps([{
+    "q": q["q"],
+    "vol": q["vol"],
+    "mentioned": q["m"],
+    "cited": q["c"],
+    "brands": q["b"],
+    "bc": q["bc"]
+} for q in questions])
 
-# SoV history for trend
-dates_sorted = sorted(sov_history.keys())
-acko_trend = [(d, sov_history[d].get("Acko", 0)) for d in dates_sorted]
-max_trend = max((v for _, v in acko_trend), default=1) or 1
-trend_bars = ""
-for d, v in acko_trend:
-    h = max(v / max_trend * 120, 4)
-    trend_bars += f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:28px;height:{h:.0f}px;background:#6c63ff;border-radius:4px 4px 0 0;opacity:0.8"></div><span style="font-size:10px;color:#8892a4">{d[5:]}</span><span style="font-size:11px;color:#6c63ff;font-weight:600">{v}%</span></div>'
-
-# SoV history table
-sov_table_header = "<th style='text-align:left;padding:8px;background:#0f1629;color:#8892a4;font-size:11px;border-bottom:1px solid #1e2a4a'>Brand</th>"
-for d in dates_sorted:
-    sov_table_header += f"<th style='text-align:right;padding:8px;background:#0f1629;color:#8892a4;font-size:11px;border-bottom:1px solid #1e2a4a'>{d[5:]}</th>"
-
-sov_table_rows = ""
-all_brands = sorted(set(b for day in sov_history.values() for b in day.keys()))
-for brand in sorted(all_brands, key=lambda b: -(sov_history.get(dates_sorted[-1], {}).get(b, 0))):
-    is_acko = brand == "Acko"
-    bs = "color:#6c63ff;font-weight:700" if is_acko else "color:#e0e6ed"
-    row = f"<td style='padding:8px;{bs};font-size:12px'>{brand}</td>"
-    for d in dates_sorted:
-        v = sov_history.get(d, {}).get(brand, 0)
-        row += f"<td style='padding:8px;text-align:right;font-size:12px;color:#8892a4'>{v}%</td>"
-    sov_table_rows += f"<tr style='border-bottom:1px solid #141c2e'>{row}</tr>"
-
-# Gap & wins
+# Gap analysis
 gaps = [q for q in questions if not q["m"] and q["vol"] > 0][:15]
 wins = [q for q in questions if q["m"] and q["c"]][:15]
 
 gap_rows = ""
 for q in gaps:
-    gap_rows += f'<tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">{q["q"]}</td><td style="padding:8px;color:#f59e0b;font-weight:600">{q["vol"]:,}</td><td style="padding:8px;color:#6b7280;font-size:11px">{q["b"]}</td></tr>'
+    gap_rows += f'''<tr>
+<td style="font-size: 0.85rem;">{q["q"][:50]}...</td>
+<td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">{q["vol"]}</span></td>
+<td style="font-size: 0.8rem;">{q["b"]}</td>
+</tr>'''
 
 win_rows = ""
 for q in wins:
-    win_rows += f'<tr><td style="padding:8px;color:#e0e6ed;font-size:12px;max-width:350px">{q["q"]}</td><td style="padding:8px;color:#10b981;font-weight:600">{q["vol"]:,}</td></tr>'
+    win_rows += f'''<tr>
+<td style="font-size: 0.85rem;">{q["q"][:50]}...</td>
+<td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">{q["vol"]}</span></td>
+</tr>'''
+
+# Build SoV_HISTORY object for JS
+sov_history_json = json.dumps(sov_history)
 
 html = f'''<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ACKO GMC AI Visibility Dashboard</title>
-<style>
-*{{margin:0;padding:0;box-sizing:border-box}}
-body{{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#e0e6ed;min-height:100vh}}
-.hdr{{background:linear-gradient(135deg,#0f1629,#1a2342);padding:20px 28px;border-bottom:1px solid #1e2a4a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}}
-.hdr h1{{font-size:20px;font-weight:700;color:#fff}}.hdr h1 b{{color:#6c63ff}}
-.hdr .m{{font-size:12px;color:#8892a4}}.hdr .m b{{color:#6c63ff}}
-.wrap{{max-width:1400px;margin:0 auto;padding:20px}}
-.krow{{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:24px}}
-.kpi{{background:#111827;border:1px solid #1e2a4a;border-radius:10px;padding:16px;text-align:center;position:relative;overflow:hidden}}
-.kpi::before{{content:'';position:absolute;top:0;left:0;right:0;height:3px}}
-.kpi.g::before{{background:#10b981}}.kpi.b::before{{background:#6c63ff}}.kpi.o::before{{background:#f59e0b}}.kpi.r::before{{background:#ef4444}}.kpi.p::before{{background:#8b5cf6}}.kpi.c::before{{background:#06b6d4}}
-.kpi .v{{font-size:28px;font-weight:800;margin:6px 0 2px}}.kpi .l{{font-size:10px;color:#8892a4;text-transform:uppercase;letter-spacing:.8px}}.kpi .s{{font-size:11px;color:#6b7280;margin-top:2px}}
-.kpi.g .v{{color:#10b981}}.kpi.b .v{{color:#6c63ff}}.kpi.o .v{{color:#f59e0b}}.kpi.r .v{{color:#ef4444}}.kpi.p .v{{color:#8b5cf6}}.kpi.c .v{{color:#06b6d4}}
-.g2{{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}}
-.card{{background:#111827;border:1px solid #1e2a4a;border-radius:10px;padding:16px}}
-.card h3{{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px}}
-.fw{{background:#111827;border:1px solid #1e2a4a;border-radius:10px;padding:16px;margin-bottom:24px}}
-.fw h3{{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px}}
-table{{width:100%;border-collapse:collapse;font-size:12px}}
-th{{text-align:left;padding:8px;background:#0f1629;color:#8892a4;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #1e2a4a;position:sticky;top:0}}
-td{{padding:8px;border-bottom:1px solid #141c2e}}
-tr:hover td{{background:#0f1629}}
-.scr{{max-height:500px;overflow-y:auto;border-radius:6px}}
-.scr::-webkit-scrollbar{{width:5px}}.scr::-webkit-scrollbar-track{{background:#0a0e1a}}.scr::-webkit-scrollbar-thumb{{background:#2d3748;border-radius:3px}}
-.fr{{display:flex;gap:10px;margin-bottom:12px;align-items:center;flex-wrap:wrap}}
-.fr select,.fr input{{background:#0f1629;border:1px solid #1e2a4a;color:#e0e6ed;padding:7px 10px;border-radius:6px;font-size:12px;outline:none}}
-.fr select:focus,.fr input:focus{{border-color:#6c63ff}}.fr label{{font-size:11px;color:#8892a4}}
-@media(max-width:1100px){{.krow{{grid-template-columns:repeat(3,1fr)}}.g2{{grid-template-columns:1fr}}}}
-@media(max-width:600px){{.krow{{grid-template-columns:repeat(2,1fr)}}}}
-</style></head><body>
-<div class="hdr">
-<h1><b>ACKO</b> GMC AI Visibility Dashboard</h1>
-<div class="m">Report: <b>{REPORT_ID[:8]}</b> · Source: <b>ChatGPT</b> · Updated: <b>{today}</b> · Prompts: <b>{total_q} tracked</b></div>
-</div>
-<div class="wrap">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACKO GMC AI Visibility Dashboard</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e1a;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }}
+        .header {{
+            background: linear-gradient(135deg, #111827 0%, #1e2a4a 100%);
+            border-bottom: 2px solid #6c63ff;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }}
+        .header h1 {{
+            font-size: 1.8rem;
+            color: #6c63ff;
+            margin-bottom: 0.5rem;
+        }}
+        .header p {{
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }}
+        .container {{
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }}
+        .controls-bar {{
+            background: #111827;
+            border: 1px solid #1e2a4a;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 2rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }}
+        .control-group {{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }}
+        .control-group label {{
+            font-size: 0.8rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }}
+        .control-group select {{
+            padding: 0.75rem;
+            background: #1e2a4a;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }}
+        .compare-check {{
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }}
+        .compare-check input[type="checkbox"] {{
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }}
+        .compare-check label {{
+            margin: 0;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: pointer;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }}
+        .compare-section {{
+            display: none;
+        }}
+        .compare-section.active {{
+            display: flex;
+        }}
+        .apply-btn {{
+            padding: 0.75rem 1.5rem;
+            background: #6c63ff;
+            border: none;
+            border-radius: 0.5rem;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }}
+        .apply-btn:hover {{
+            background: #5a51e0;
+        }}
+        .header-status {{
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            padding: 0 1rem;
+        }}
+        .kpi-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }}
+        .kpi-card {{
+            background: #111827;
+            border: 1px solid #1e2a4a;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+        }}
+        .kpi-card .label {{
+            font-size: 0.85rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }}
+        .kpi-card .value {{
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6c63ff;
+            margin-bottom: 0.5rem;
+        }}
+        .kpi-card .subtext {{
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }}
+        .kpi-card .delta {{
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }}
+        .delta.up {{
+            color: #10b981;
+        }}
+        .delta.down {{
+            color: #ef4444;
+        }}
+        .section {{
+            margin-bottom: 2rem;
+        }}
+        .section-title {{
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #6c63ff;
+        }}
+        .bar-chart {{
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }}
+        .bar-row {{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }}
+        .bar-label {{
+            min-width: 140px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }}
+        .bar-label.acko {{
+            color: #6c63ff;
+            font-weight: 600;
+        }}
+        .bar-container {{
+            flex: 1;
+            height: 28px;
+            background: #1e2a4a;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            position: relative;
+        }}
+        .bar {{
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 0.25rem;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+        }}
+        .bar.acko {{
+            background: #6c63ff;
+        }}
+        .bar-value {{
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }}
+        .table-wrapper {{
+            background: #111827;
+            border: 1px solid #1e2a4a;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }}
+        thead {{
+            position: sticky;
+            top: 0;
+            background: #1e2a4a;
+        }}
+        th {{
+            padding: 1rem;
+            text-align: left;
+            color: #9ca3af;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #374151;
+        }}
+        td {{
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #1e2a4a;
+        }}
+        tr:hover {{
+            background: #1e2a4a;
+        }}
+        .badge {{
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }}
+        .badge-yes {{
+            background: #064e3b;
+            color: #10b981;
+        }}
+        .badge-no {{
+            background: #450a0a;
+            color: #ef4444;
+        }}
+        .controls {{
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }}
+        .controls select,
+        .controls input {{
+            background: #1e2a4a;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }}
+        .controls input::placeholder {{
+            color: #6b7280;
+        }}
+        .gap-panels {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }}
+        .volume-badge {{
+            display: inline-block;
+            background: #374151;
+            color: #9ca3af;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }}
+        @media (max-width: 1024px) {{
+            .gap-panels {{
+                grid-template-columns: 1fr;
+            }}
+            .kpi-grid {{
+                grid-template-columns: repeat(2, 1fr);
+            }}
+            .controls-bar {{
+                flex-direction: column;
+                align-items: flex-start;
+            }}
+        }}
+        @media (max-width: 640px) {{
+            .kpi-grid {{
+                grid-template-columns: 1fr;
+            }}
+            .bar-row {{
+                flex-direction: column;
+                align-items: stretch;
+            }}
+            .bar-label {{
+                min-width: unset;
+            }}
+            .header h1 {{
+                font-size: 1.4rem;
+            }}
+            .controls-bar {{
+                flex-direction: column;
+                align-items: flex-start;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ACKO GMC AI Visibility Dashboard</h1>
+        <p>Generative Engine Optimisation | Data Source: ChatGPT | {total_q} Tracked Prompts | Report ID: BR-{today}</p>
+    </div>
 
-<div class="krow">
-<div class="kpi b"><div class="l">ACKO Share of Voice</div><div class="v">{acko_sov}%</div><div class="s">Rank #{acko_rank} of {len(sov)} brands</div></div>
-<div class="kpi g"><div class="l">ACKO Mentioned In</div><div class="v">{acko_mentioned_count}/{total_q}</div><div class="s">{acko_mentioned_count/total_q*100:.0f}% of AI responses</div></div>
-<div class="kpi c"><div class="l">ACKO Cited In</div><div class="v">{acko_cited_count}/{total_q}</div><div class="s">acko.com linked in {acko_cited_count/total_q*100:.0f}% responses</div></div>
-<div class="kpi o"><div class="l">Total AI Search Volume</div><div class="v">{total_volume:,}</div><div class="s">Across {total_q} tracked prompts</div></div>
-<div class="kpi p"><div class="l">ACKO Volume Reach</div><div class="v">{acko_volume:,}</div><div class="s">{acko_volume/total_volume*100:.0f}% of total volume</div></div>
-<div class="kpi r"><div class="l">Top Competitor</div><div class="v">{top_competitor["brand"]}</div><div class="s">{top_competitor["sov"]}% SoV</div></div>
-</div>
+    <div class="container">
+        <!-- DATE CONTROLS -->
+        <div class="controls-bar">
+            <div class="control-group">
+                <label>Period A</label>
+                <select id="dateSelectA">
+                    {date_options_a}
+                </select>
+            </div>
+            <div class="compare-check">
+                <input type="checkbox" id="compareToggle">
+                <label for="compareToggle">Compare with Period B</label>
+            </div>
+            <div class="compare-section" id="comparePeriodSection">
+                <div class="control-group">
+                    <label>Period B</label>
+                    <select id="dateSelectB">
+                        {date_options_b}
+                    </select>
+                </div>
+            </div>
+            <button class="apply-btn" id="applyBtn">Apply</button>
+        </div>
 
-<div class="g2">
-<div class="card"><h3>Share of Voice — All Brands</h3>{sov_bars}</div>
-<div class="card"><h3>Brand Mentions in AI Responses</h3>{bm_bars}</div>
-</div>
+        <div class="header-status" id="headerStatus">Viewing: {datetime.strptime(dates_sorted[-1], "%Y-%m-%d").strftime("%b %d, %Y")}</div>
 
-<div class="g2">
-<div class="card"><h3>Top 20 Cited Domains</h3><div class="scr"><table><thead><tr><th>#</th><th>Domain</th><th>Responses</th></tr></thead><tbody>{domain_rows}</tbody></table></div></div>
-<div class="card">
-<h3>ACKO Cited Pages</h3><div class="scr"><table><thead><tr><th>URL</th><th>Responses</th></tr></thead><tbody>{acko_page_rows}</tbody></table></div>
-<h3 style="margin-top:20px">SoV History by Date</h3><div class="scr" style="max-height:300px"><table><thead><tr>{sov_table_header}</tr></thead><tbody>{sov_table_rows}</tbody></table></div>
-</div>
-</div>
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="label">ACKO Share of Voice</div>
+                <div class="value" id="kpiSoV">{acko_sov}%</div>
+                <div class="subtext" id="kpiSoVRank">Rank #{acko_rank} of {len(sov)} brands</div>
+                <div class="delta" id="kpiSoVDelta" style="display: none;"></div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">ACKO Mentioned In</div>
+                <div class="value">{acko_mentioned_count}/{total_q}</div>
+                <div class="subtext">{acko_mentioned_count/total_q*100:.0f}% of AI responses</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">ACKO Cited In</div>
+                <div class="value">{acko_cited_count}/{total_q}</div>
+                <div class="subtext">acko.com linked in {acko_cited_count/total_q*100:.0f}% responses</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">Total AI Search Volume</div>
+                <div class="value">{total_volume:,}</div>
+                <div class="subtext">Across {total_q} tracked prompts</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">ACKO Volume Reach</div>
+                <div class="value">{acko_volume:,}</div>
+                <div class="subtext">{acko_volume/total_volume*100:.0f}% of total volume</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">Top Competitor</div>
+                <div class="value" id="kpiTopCompetitor">{top_competitor["brand"]}</div>
+                <div class="subtext" id="kpiTopCompetitorValue">{top_competitor["sov"]}% SoV</div>
+            </div>
+        </div>
 
-<div class="fw">
-<h3>Prompt-Level Breakdown — All {total_q} Tracked Prompts</h3>
-<div class="fr">
-<label>Filter:</label>
-<select id="flt" onchange="ft()"><option value="all">All Prompts</option><option value="m">ACKO Mentioned</option><option value="nm">ACKO NOT Mentioned</option><option value="c">ACKO Cited</option><option value="nc">ACKO NOT Cited</option></select>
-<input type="text" id="src" placeholder="Search prompts..." oninput="ft()" style="width:260px">
-<label id="rc" style="margin-left:auto;color:#6c63ff"></label>
-</div>
-<div class="scr" style="max-height:600px"><table><thead><tr><th>#</th><th>Prompt</th><th>AI Vol</th><th>Mentioned</th><th>Cited</th><th>Brands</th></tr></thead><tbody id="pt"></tbody></table></div>
-</div>
+        <!-- SECTION 1: SHARE OF VOICE -->
+        <div class="section">
+            <h2 class="section-title" id="sovChartTitle">Share of Voice — All Brands ({datetime.strptime(dates_sorted[-1], "%Y-%m-%d").strftime("%b %d")})</h2>
+            <div class="bar-chart" id="sovBarChart">
+            </div>
+        </div>
 
-<div class="g2">
-<div class="card"><h3 style="color:#ef4444">High-Volume Gaps — ACKO Missing</h3><div class="scr"><table><thead><tr><th>Prompt</th><th>AI Vol</th><th>Brands Present</th></tr></thead><tbody>{gap_rows}</tbody></table></div></div>
-<div class="card"><h3 style="color:#10b981">ACKO Wins — Mentioned + Cited</h3><div class="scr"><table><thead><tr><th>Prompt</th><th>AI Vol</th></tr></thead><tbody>{win_rows}</tbody></table></div></div>
-</div>
+        <!-- SECTION 2: BRAND MENTIONS -->
+        <div class="section">
+            <h2 class="section-title">Brand Mentions in AI Responses</h2>
+            <div class="bar-chart" id="brandMentionsChart">
+            </div>
+        </div>
 
-</div>
-<script>
-const Q={questions_json};
-function bd(v,g,b){{return v?'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:'+g+'">YES</span>':'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:'+b+'">NO</span>';}}
-function rn(d){{const t=document.getElementById('pt');t.innerHTML='';d.forEach((q,i)=>{{t.innerHTML+='<tr><td style="color:#8892a4">'+(i+1)+'</td><td style="color:#e0e6ed;max-width:400px">'+q.q+'</td><td style="color:#f59e0b;font-weight:600">'+(q.vol>0?q.vol.toLocaleString():'-')+'</td><td>'+bd(q.m,'#064e3b','#450a0a')+'</td><td>'+bd(q.c,'#064e3b','#450a0a')+'</td><td style="color:#6b7280;font-size:11px">'+q.b+'</td></tr>';}});document.getElementById('rc').textContent=d.length+' prompts';}}
-function ft(){{let f=document.getElementById('flt').value,s=document.getElementById('src').value.toLowerCase(),d=Q;if(f==='m')d=d.filter(q=>q.m);else if(f==='nm')d=d.filter(q=>!q.m);else if(f==='c')d=d.filter(q=>q.c);else if(f==='nc')d=d.filter(q=>!q.c);if(s)d=d.filter(q=>q.q.toLowerCase().includes(s));rn(d);}}
-rn(Q);
-</script></body></html>'''
+        <!-- SECTION 3: TOP 20 CITED DOMAINS -->
+        <div class="section">
+            <h2 class="section-title">Top 20 Cited Domains</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Domain</th>
+                            <th style="width: 80px;">Responses</th>
+                            <th style="flex: 1;">Visual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {domain_table_rows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 4: ACKO CITED PAGES -->
+        <div class="section">
+            <h2 class="section-title">ACKO Cited Pages</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Page URL</th>
+                            <th style="width: 120px;">Responses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {acko_page_rows if acko_page_rows else '<tr><td colspan="2" style="text-align: center; color: #6b7280;">No ACKO pages cited yet</td></tr>'}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 5: PROMPT-LEVEL BREAKDOWN -->
+        <div class="section">
+            <h2 class="section-title">Prompt-Level Breakdown ({total_q} Total)</h2>
+            <div class="controls">
+                <select id="filterSelect">
+                    <option value="all">All Prompts</option>
+                    <option value="mentioned">ACKO Mentioned</option>
+                    <option value="notMentioned">ACKO Not Mentioned</option>
+                    <option value="cited">ACKO Cited</option>
+                    <option value="notCited">ACKO Not Cited</option>
+                </select>
+                <input type="text" id="searchInput" placeholder="Search prompts...">
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 350px;">Prompt</th>
+                            <th style="width: 80px;">AI Vol</th>
+                            <th style="width: 80px;">Mentioned</th>
+                            <th style="width: 80px;">Cited</th>
+                            <th style="width: 200px;">Brands Present</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promptsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 6: GAP ANALYSIS -->
+        <div class="section">
+            <h2 class="section-title">Gap Analysis</h2>
+            <div class="gap-panels">
+                <div>
+                    <h3 style="color: #ef4444; margin-bottom: 1rem; font-size: 1rem;">High-Volume Gaps — ACKO Missing</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Prompt</th>
+                                    <th style="width: 80px;">AI Vol</th>
+                                    <th style="width: 150px;">Brands Present</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {gap_rows if gap_rows else '<tr><td colspan="3" style="text-align: center; color: #6b7280;">No gaps found — great coverage!</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: #10b981; margin-bottom: 1rem; font-size: 1rem;">ACKO Wins — Mentioned + Cited</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Prompt</th>
+                                    <th style="width: 80px;">AI Vol</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {win_rows if win_rows else '<tr><td colspan="2" style="text-align: center; color: #6b7280;">No wins found yet</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const SOV_HISTORY = {sov_history_json};
+const QUESTIONS = {questions_json};
+const BRAND_MENTIONS = {bm_data};
+
+let currentDate = "{dates_sorted[-1]}";
+let compareDate = null;
+let isComparing = false;
+
+function getDateLabel(date) {{
+  const d = new Date(date + "T00:00:00");
+  return d.toLocaleDateString('en-US', {{month: 'short', day: 'numeric', year: 'numeric'}});
+}}
+
+function getSoVRank(date) {{
+  const data = SOV_HISTORY[date];
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  return sorted.findIndex(e => e[0] === "Acko") + 1;
+}}
+
+function getTopCompetitor(date) {{
+  const data = SOV_HISTORY[date];
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  return {{name: sorted[0][0], value: sorted[0][1].toFixed(1)}};
+}}
+
+function renderSoVChart(date) {{
+  const data = SOV_HISTORY[date];
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  const maxVal = sorted[0][1];
+
+  const chart = document.getElementById('sovBarChart');
+  chart.innerHTML = sorted.map(([brand, val]) => {{
+    const pct = (val / maxVal) * 100;
+    const isAcko = brand === "Acko";
+    return `
+      <div class="bar-row">
+        <div class="bar-label ${{isAcko ? 'acko' : ''}}">${{brand}}</div>
+        <div class="bar-container"><div class="bar ${{isAcko ? 'acko' : ''}}" style="width: ${{pct}}%"><span class="bar-value">${{val.toFixed(1)}}%</span></div></div>
+      </div>
+    `;
+  }}).join('');
+
+  document.getElementById('sovChartTitle').textContent = `Share of Voice — All Brands (${{getDateLabel(date)}})`;
+}}
+
+function renderBrandMentionsChart() {{
+  const maxVal = BRAND_MENTIONS[0].count;
+  const chart = document.getElementById('brandMentionsChart');
+  chart.innerHTML = BRAND_MENTIONS.map(item => {{
+    const pct = (item.count / maxVal) * 100;
+    const isAcko = item.brand === "Acko";
+    return `
+      <div class="bar-row">
+        <div class="bar-label ${{isAcko ? 'acko' : ''}}">${{item.brand}}</div>
+        <div class="bar-container"><div class="bar ${{isAcko ? 'acko' : ''}}" style="width: ${{pct}}%"><span class="bar-value">${{item.count}}</span></div></div>
+      </div>
+    `;
+  }}).join('');
+}}
+
+function renderSoVTable() {{}}
+function updateTrendHighlight() {{}}
+
+function calculateDelta(current, previous) {{
+  const diff = current - previous;
+  const pp = diff.toFixed(1);
+
+  if (diff > 0) {{
+    return `▲ +${{pp}}pp`;
+  }} else if (diff < 0) {{
+    return `▼ ${{pp}}pp`;
+  }} else {{
+    return '→ 0pp';
+  }}
+}}
+
+function updateKPIs() {{
+  const ackoSoV = SOV_HISTORY[currentDate]["Acko"];
+  const rank = getSoVRank(currentDate);
+  const topComp = getTopCompetitor(currentDate);
+
+  document.getElementById('kpiSoV').textContent = ackoSoV.toFixed(1) + '%';
+  document.getElementById('kpiSoVRank').textContent = `Rank #${{rank}} of 14 brands`;
+  document.getElementById('kpiTopCompetitor').textContent = topComp.name;
+  document.getElementById('kpiTopCompetitorValue').textContent = topComp.value + '% SoV';
+
+  const deltaEl = document.getElementById('kpiSoVDelta');
+  if (isComparing && compareDate) {{
+    const compareSoV = SOV_HISTORY[compareDate]["Acko"];
+    const deltaTxt = calculateDelta(ackoSoV, compareSoV);
+    deltaEl.textContent = deltaTxt;
+    deltaEl.className = 'delta ' + (ackoSoV > compareSoV ? 'up' : ackoSoV < compareSoV ? 'down' : '');
+    deltaEl.style.display = 'block';
+  }} else {{
+    deltaEl.style.display = 'none';
+  }}
+}}
+
+function updateHeaderStatus() {{
+  const status = document.getElementById('headerStatus');
+  if (isComparing && compareDate) {{
+    status.textContent = `Comparing ${{getDateLabel(currentDate)}} vs ${{getDateLabel(compareDate)}}`;
+  }} else {{
+    status.textContent = `Viewing: ${{getDateLabel(currentDate)}}`;
+  }}
+}}
+
+function updateDashboard() {{
+  renderSoVChart(currentDate);
+  renderBrandMentionsChart();
+  renderSoVTable();
+  updateTrendHighlight();
+  updateKPIs();
+  updateHeaderStatus();
+}}
+
+document.getElementById('compareToggle').addEventListener('change', (e) => {{
+  isComparing = e.target.checked;
+  document.getElementById('comparePeriodSection').classList.toggle('active', isComparing);
+  if (!isComparing) {{
+    compareDate = null;
+  }} else {{
+    compareDate = document.getElementById('dateSelectB').value;
+  }}
+  updateDashboard();
+}});
+
+document.getElementById('applyBtn').addEventListener('click', () => {{
+  currentDate = document.getElementById('dateSelectA').value;
+  if (isComparing) {{
+    compareDate = document.getElementById('dateSelectB').value;
+  }}
+  updateDashboard();
+}});
+
+// Filter & Search
+let filteredData = [...QUESTIONS];
+
+document.getElementById('filterSelect').addEventListener('change', (e) => {{
+    const filter = e.target.value;
+    filteredData = QUESTIONS.filter(item => {{
+        if (filter === 'mentioned') return item.mentioned;
+        if (filter === 'notMentioned') return !item.mentioned;
+        if (filter === 'cited') return item.cited;
+        if (filter === 'notCited') return !item.cited;
+        return true;
+    }});
+    applySearch();
+}});
+
+document.getElementById('searchInput').addEventListener('input', applySearch);
+
+function applySearch() {{
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const display = filteredData.filter(item => item.q.toLowerCase().includes(query));
+    renderPrompts(display);
+}}
+
+function renderPrompts(data) {{
+    const tbody = document.getElementById('promptsTableBody');
+    tbody.innerHTML = data.map((item, idx) => `
+        <tr>
+            <td style="font-size: 0.85rem;">${{item.q.substring(0, 50)}}...</td>
+            <td><span class="volume-badge">${{item.vol.toLocaleString()}}</span></td>
+            <td><span class="badge ${{item.mentioned ? 'badge-yes' : 'badge-no'}}">${{item.mentioned ? 'YES' : 'NO'}}</span></td>
+            <td><span class="badge ${{item.cited ? 'badge-yes' : 'badge-no'}}">${{item.cited ? 'YES' : 'NO'}}</span></td>
+            <td style="font-size: 0.8rem;">${{item.brands}}</td>
+        </tr>
+    `).join('');
+}}
+
+// Initial render
+updateDashboard();
+renderPrompts(QUESTIONS);
+    </script>
+</body>
+</html>'''
 
 with open("index.html", "w") as f:
     f.write(html)
