@@ -328,7 +328,7 @@
 <body>
     <div class="header">
         <h1>ACKO GMC AI Visibility Dashboard</h1>
-        <p>Generative Engine Optimisation | Data Source: ChatGPT | 100 Tracked Prompts | Report ID: BR-2026-04-18</p>
+        <p>Generative Engine Optimisation | Data Source: ChatGPT | 100 Tracked Prompts | Report ID: BR-2026-04-20</p>
     </div>
 
     <div class="container">
@@ -340,7 +340,9 @@
                     <option value="2026-04-15" >Apr 15, 2026</option>
 <option value="2026-04-16" >Apr 16, 2026</option>
 <option value="2026-04-17" >Apr 17, 2026</option>
-<option value="2026-04-18" selected>Apr 18, 2026</option>
+<option value="2026-04-18" >Apr 18, 2026</option>
+<option value="2026-04-19" >Apr 19, 2026</option>
+<option value="2026-04-20" selected>Apr 20, 2026</option>
                 </select>
             </div>
             <div class="compare-check">
@@ -353,15 +355,17 @@
                     <select id="dateSelectB">
                         <option value="2026-04-15" >Apr 15, 2026</option>
 <option value="2026-04-16" >Apr 16, 2026</option>
-<option value="2026-04-17" selected>Apr 17, 2026</option>
+<option value="2026-04-17" >Apr 17, 2026</option>
 <option value="2026-04-18" >Apr 18, 2026</option>
+<option value="2026-04-19" selected>Apr 19, 2026</option>
+<option value="2026-04-20" >Apr 20, 2026</option>
                     </select>
                 </div>
             </div>
             <button class="apply-btn" id="applyBtn">Apply</button>
         </div>
 
-        <div class="header-status" id="headerStatus">Viewing: Apr 18, 2026</div>
+        <div class="header-status" id="headerStatus">Viewing: Apr 20, 2026</div>
 
         <!-- KPI CARDS -->
         <div class="kpi-grid">
@@ -373,23 +377,27 @@
             </div>
             <div class="kpi-card">
                 <div class="label">ACKO Mentioned In</div>
-                <div class="value">24/100</div>
-                <div class="subtext">24% of AI responses</div>
+                <div class="value" id="kpiMentioned">24/100</div>
+                <div class="subtext" id="kpiMentionedSub">24% of AI responses</div>
+                <div class="delta" id="kpiMentionedDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">ACKO Cited In</div>
-                <div class="value">46/100</div>
-                <div class="subtext">acko.com linked in 46% responses</div>
+                <div class="value" id="kpiCited">46/100</div>
+                <div class="subtext" id="kpiCitedSub">acko.com linked in 46% responses</div>
+                <div class="delta" id="kpiCitedDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">Total AI Search Volume</div>
-                <div class="value">68,186</div>
-                <div class="subtext">Across 100 tracked prompts</div>
+                <div class="value" id="kpiVolume">68,186</div>
+                <div class="subtext" id="kpiVolumeSub">Across 100 tracked prompts</div>
+                <div class="delta" id="kpiVolumeDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">ACKO Volume Reach</div>
-                <div class="value">16,745</div>
-                <div class="subtext">25% of total volume</div>
+                <div class="value" id="kpiReach">16,745</div>
+                <div class="subtext" id="kpiReachSub">25% of total volume</div>
+                <div class="delta" id="kpiReachDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">Top Competitor</div>
@@ -400,7 +408,7 @@
 
         <!-- SECTION 1: SHARE OF VOICE -->
         <div class="section">
-            <h2 class="section-title" id="sovChartTitle">Share of Voice — All Brands (Apr 18)</h2>
+            <h2 class="section-title" id="sovChartTitle">Share of Voice — All Brands (Apr 20)</h2>
             <div class="bar-chart" id="sovBarChart">
             </div>
         </div>
@@ -603,63 +611,63 @@
                             </thead>
                             <tbody>
                                 <tr>
-<td style="font-size: 0.85rem;">What is GIPSA in Group Health Insurance?...</td>
+<td style="font-size: 0.85rem;">What is GIPSA in Group Health Insurance?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">9214</span></td>
 <td style="font-size: 0.8rem;"></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What is group medical insurance and how does it wo...</td>
+<td style="font-size: 0.85rem;">What is group medical insurance and how does it work in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">2157</span></td>
 <td style="font-size: 0.8rem;">Niva Bupa, InsuranceDekho</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">How much does group mediclaim policy cost per empl...</td>
+<td style="font-size: 0.85rem;">How much does group mediclaim policy cost per employee in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1629</span></td>
 <td style="font-size: 0.8rem;">Pazcare</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Is group insurance policy premium tax deductible f...</td>
+<td style="font-size: 0.85rem;">Is group insurance policy premium tax deductible for employers in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1413</span></td>
 <td style="font-size: 0.8rem;">PolicyBazaar, Pazcare</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Is group insurance scheme premium tax deductible f...</td>
+<td style="font-size: 0.85rem;">Is group insurance scheme premium tax deductible for employers in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1413</span></td>
 <td style="font-size: 0.8rem;">PolicyBazaar</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Is group medical insurance premium tax deductible ...</td>
+<td style="font-size: 0.85rem;">Is group medical insurance premium tax deductible for employers in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1413</span></td>
 <td style="font-size: 0.8rem;">PolicyBazaar</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Is group health insurance policy premium tax deduc...</td>
+<td style="font-size: 0.85rem;">Is group health insurance policy premium tax deductible for employers in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1413</span></td>
 <td style="font-size: 0.8rem;">PolicyBazaar, Pazcare</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Is group mediclaim policy premium tax deductible f...</td>
+<td style="font-size: 0.85rem;">Is group mediclaim policy premium tax deductible for employers in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1413</span></td>
 <td style="font-size: 0.8rem;">PolicyBazaar, Plum</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">How to buy group insurance scheme for a company in...</td>
+<td style="font-size: 0.85rem;">How to buy group insurance scheme for a company in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;">Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Plum, Onsurity</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What does group insurance scheme cover and what ar...</td>
+<td style="font-size: 0.85rem;">What does group insurance scheme cover and what are common exclusions?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;">Pazcare</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">group insurance scheme claim process explained ste...</td>
+<td style="font-size: 0.85rem;">group insurance scheme claim process explained step by step</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;">Tata AIG, Pazcare</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What is group insurance scheme and how does it wor...</td>
+<td style="font-size: 0.85rem;">What is group insurance scheme and how does it work in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;">Plum</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What are the advantages and disadvantages of group...</td>
+<td style="font-size: 0.85rem;">What are the advantages and disadvantages of group insurance scheme?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;"></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">group insurance scheme for 10 to 50 employees: wha...</td>
+<td style="font-size: 0.85rem;">group insurance scheme for 10 to 50 employees: what should employers know?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;">Tata AIG, Pazcare, Plum</td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What are the benefits of group insurance scheme fo...</td>
+<td style="font-size: 0.85rem;">What are the benefits of group insurance scheme for employees?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 <td style="font-size: 0.8rem;">Plum</td>
 </tr>
@@ -679,49 +687,49 @@
                             </thead>
                             <tbody>
                                 <tr>
-<td style="font-size: 0.85rem;">How are group health insurance premiums calculated...</td>
+<td style="font-size: 0.85rem;">How are group health insurance premiums calculated?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">6371</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Who Is Eligible for Group Health Insurance?...</td>
+<td style="font-size: 0.85rem;">Who Is Eligible for Group Health Insurance?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">2157</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Who Are Eligible For Group Health Insurance?...</td>
+<td style="font-size: 0.85rem;">Who Are Eligible For Group Health Insurance?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">2157</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">How does group insurance scheme work for employers...</td>
+<td style="font-size: 0.85rem;">How does group insurance scheme work for employers in India?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">1120</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Types Of Group Insurance Plans In India...</td>
+<td style="font-size: 0.85rem;">Types Of Group Insurance Plans In India</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">708</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What are the advantages and disadvantages of group...</td>
+<td style="font-size: 0.85rem;">What are the advantages and disadvantages of group medical insurance?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">530</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">What are the advantages and disadvantages of group...</td>
+<td style="font-size: 0.85rem;">What are the advantages and disadvantages of group health insurance policy?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">530</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Advantages Of Group Health Insurance...</td>
+<td style="font-size: 0.85rem;">Advantages Of Group Health Insurance</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">404</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Pros and cons of group health insurance policy...</td>
+<td style="font-size: 0.85rem;">Pros and cons of group health insurance policy</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">404</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Benefits of Group Accident Insurance...</td>
+<td style="font-size: 0.85rem;">Benefits of Group Accident Insurance</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">326</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Types of group mediclaim policy plans available in...</td>
+<td style="font-size: 0.85rem;">Types of group mediclaim policy plans available in India</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">266</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Types of group medical insurance plans available i...</td>
+<td style="font-size: 0.85rem;">Types of group medical insurance plans available in India</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">266</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Types of group insurance scheme plans available in...</td>
+<td style="font-size: 0.85rem;">Types of group insurance scheme plans available in India</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">266</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Types of group health insurance policy plans avail...</td>
+<td style="font-size: 0.85rem;">Types of group health insurance policy plans available in India</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">266</span></td>
 </tr><tr>
-<td style="font-size: 0.85rem;">Is Pre-Existing Disease Covered by Group Health In...</td>
+<td style="font-size: 0.85rem;">Is Pre-Existing Disease Covered by Group Health Insurance?</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">135</span></td>
 </tr>
                             </tbody>
@@ -733,11 +741,12 @@
     </div>
 
     <script>
-const SOV_HISTORY = {"2026-04-15": {"Acko": 4.5, "GoDigit": 4.9, "Tata AIG": 100.0, "PolicyBazaar": 95.5, "InsuranceDekho": 3.7, "ICICI Lombard": 95.5, "HDFC ERGO": 24.4, "Bajaj Allianz": 19.2, "policybazaar": 95.5, "star health": 79.0, "pazcare": 85.1, "plumhq": 0.8, "onsurity": 218.7, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 7.1, "niva bupa": 118.7}, "2026-04-16": {"Acko": 46.8, "GoDigit": 1.0, "Tata AIG": 91.3, "PolicyBazaar": 56.6, "InsuranceDekho": 4.4, "ICICI Lombard": 36.0, "HDFC ERGO": 7.6, "Bajaj Allianz": 7.4, "policybazaar": 56.6, "star health": 19.8, "pazcare": 75.5, "plumhq": 45.2, "onsurity": 48.3, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 4.2, "niva bupa": 32.7}, "2026-04-17": {"Acko": 50.7, "GoDigit": 0.0, "Tata AIG": 84.1, "PolicyBazaar": 53.3, "InsuranceDekho": 9.7, "ICICI Lombard": 33.8, "HDFC ERGO": 6.3, "Bajaj Allianz": 6.8, "policybazaar": 53.3, "star health": 17.0, "pazcare": 68.2, "plumhq": 47.5, "onsurity": 40.1, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 3.5, "niva bupa": 27.8}, "2026-04-18": {"Acko": 49.4, "GoDigit": 0.0, "Tata AIG": 83.9, "PolicyBazaar": 54.0, "InsuranceDekho": 10.0, "ICICI Lombard": 35.0, "HDFC ERGO": 0.0, "Bajaj Allianz": 0.0, "policybazaar": 54.0, "star health": 0.0, "pazcare": 67.0, "plumhq": 48.9, "onsurity": 0.0, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 0.0, "niva bupa": 0.0}};
+const SOV_HISTORY = {"2026-04-15": {"Acko": 4.5, "GoDigit": 4.9, "Tata AIG": 100.0, "PolicyBazaar": 95.5, "InsuranceDekho": 3.7, "ICICI Lombard": 95.5, "HDFC ERGO": 24.4, "Bajaj Allianz": 19.2, "policybazaar": 95.5, "star health": 79.0, "pazcare": 85.1, "plumhq": 0.8, "onsurity": 218.7, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 7.1, "niva bupa": 118.7}, "2026-04-16": {"Acko": 46.8, "GoDigit": 1.0, "Tata AIG": 91.3, "PolicyBazaar": 56.6, "InsuranceDekho": 4.4, "ICICI Lombard": 36.0, "HDFC ERGO": 7.6, "Bajaj Allianz": 7.4, "policybazaar": 56.6, "star health": 19.8, "pazcare": 75.5, "plumhq": 45.2, "onsurity": 48.3, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 4.2, "niva bupa": 32.7}, "2026-04-17": {"Acko": 50.7, "GoDigit": 0.8, "Tata AIG": 84.1, "PolicyBazaar": 53.3, "InsuranceDekho": 9.7, "ICICI Lombard": 33.8, "HDFC ERGO": 6.3, "Bajaj Allianz": 6.8, "policybazaar": 53.3, "star health": 17.0, "pazcare": 68.2, "plumhq": 47.5, "onsurity": 40.1, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 3.5, "niva bupa": 27.8}, "2026-04-18": {"Acko": 49.4, "GoDigit": 0.8, "Tata AIG": 83.9, "PolicyBazaar": 54.0, "InsuranceDekho": 10.0, "ICICI Lombard": 35.0, "HDFC ERGO": 6.1, "Bajaj Allianz": 6.6, "policybazaar": 54.0, "star health": 16.6, "pazcare": 67.0, "plumhq": 48.9, "onsurity": 39.0, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 3.4, "niva bupa": 27.0}, "2026-04-19": {"Acko": 49.4, "GoDigit": 0.0, "Tata AIG": 83.9, "PolicyBazaar": 54.0, "InsuranceDekho": 10.0, "ICICI Lombard": 35.0, "HDFC ERGO": 6.1, "Bajaj Allianz": 6.6, "policybazaar": 54.0, "star health": 16.6, "pazcare": 67.0, "plumhq": 48.9, "onsurity": 39.0, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 3.4, "niva bupa": 27.0}, "2026-04-20": {"Acko": 49.4, "GoDigit": 0.0, "Tata AIG": 83.9, "PolicyBazaar": 54.0, "InsuranceDekho": 10.0, "ICICI Lombard": 35.0, "HDFC ERGO": 0.0, "Bajaj Allianz": 0.0, "policybazaar": 54.0, "star health": 0.0, "pazcare": 67.0, "plumhq": 48.9, "onsurity": 0.0, "manipal cigna": 0.0, "ekincare": 0.0, "care health": 0.0, "niva bupa": 0.0}};
 const QUESTIONS = [{"q": "What is GIPSA in Group Health Insurance?", "vol": 9214, "mentioned": false, "cited": false, "brands": "", "bc": 0}, {"q": "How are group health insurance premiums calculated?", "vol": 6371, "mentioned": true, "cited": true, "brands": "Acko, Tata AIG, Onsurity", "bc": 3}, {"q": "What is group medical insurance and how does it work in India?", "vol": 2157, "mentioned": false, "cited": true, "brands": "Niva Bupa, InsuranceDekho", "bc": 2}, {"q": "Who Is Eligible for Group Health Insurance?", "vol": 2157, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "Who Are Eligible For Group Health Insurance?", "vol": 2157, "mentioned": true, "cited": true, "brands": "Acko, PolicyBazaar, Plum, Onsurity", "bc": 4}, {"q": "How much does group mediclaim policy cost per employee in India?", "vol": 1629, "mentioned": false, "cited": false, "brands": "Pazcare", "bc": 1}, {"q": "Is group insurance policy premium tax deductible for employers in India?", "vol": 1413, "mentioned": false, "cited": false, "brands": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "Is group insurance scheme premium tax deductible for employers in India?", "vol": 1413, "mentioned": false, "cited": true, "brands": "PolicyBazaar", "bc": 1}, {"q": "Is group medical insurance premium tax deductible for employers in India?", "vol": 1413, "mentioned": false, "cited": false, "brands": "PolicyBazaar", "bc": 1}, {"q": "Is group health insurance policy premium tax deductible for employers in India?", "vol": 1413, "mentioned": false, "cited": false, "brands": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "Is group mediclaim policy premium tax deductible for employers in India?", "vol": 1413, "mentioned": false, "cited": false, "brands": "PolicyBazaar, Plum", "bc": 2}, {"q": "How to buy group insurance scheme for a company in India?", "vol": 1120, "mentioned": false, "cited": false, "brands": "Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Plum, Onsurity", "bc": 6}, {"q": "How does group insurance scheme work for employers in India?", "vol": 1120, "mentioned": true, "cited": true, "brands": "Acko, Plum", "bc": 2}, {"q": "What does group insurance scheme cover and what are common exclusions?", "vol": 1120, "mentioned": false, "cited": true, "brands": "Pazcare", "bc": 1}, {"q": "group insurance scheme claim process explained step by step", "vol": 1120, "mentioned": false, "cited": false, "brands": "Tata AIG, Pazcare", "bc": 2}, {"q": "What is group insurance scheme and how does it work in India?", "vol": 1120, "mentioned": false, "cited": true, "brands": "Plum", "bc": 1}, {"q": "What are the advantages and disadvantages of group insurance scheme?", "vol": 1120, "mentioned": false, "cited": true, "brands": "", "bc": 0}, {"q": "group insurance scheme for 10 to 50 employees: what should employers know?", "vol": 1120, "mentioned": false, "cited": true, "brands": "Tata AIG, Pazcare, Plum", "bc": 3}, {"q": "What are the benefits of group insurance scheme for employees?", "vol": 1120, "mentioned": false, "cited": false, "brands": "Plum", "bc": 1}, {"q": "How to compare group insurance scheme policies for a growing company?", "vol": 1120, "mentioned": false, "cited": true, "brands": "", "bc": 0}, {"q": "What is PPN in Group Health Insurance?", "vol": 1120, "mentioned": false, "cited": false, "brands": "PolicyBazaar", "bc": 1}, {"q": "What is group insurance policy and how does it work in India?", "vol": 1102, "mentioned": false, "cited": true, "brands": "Plum", "bc": 1}, {"q": "What does group insurance policy cover and what are common exclusions?", "vol": 1102, "mentioned": false, "cited": true, "brands": "Pazcare, Plum, Onsurity", "bc": 3}, {"q": "What is group health insurance policy and how does it work in India?", "vol": 1058, "mentioned": false, "cited": true, "brands": "Plum", "bc": 1}, {"q": "How to Cancel Your Group Health Insurance Policy?", "vol": 1058, "mentioned": false, "cited": false, "brands": "PolicyBazaar, Plum", "bc": 2}, {"q": "What does group health insurance policy cover and what are common exclusions?", "vol": 1058, "mentioned": false, "cited": false, "brands": "Pazcare", "bc": 1}, {"q": "How does group mediclaim policy work for employers in India?", "vol": 872, "mentioned": false, "cited": false, "brands": "Bajaj Allianz, Pazcare, Plum", "bc": 3}, {"q": "What does group mediclaim policy cover and what are common exclusions?", "vol": 872, "mentioned": false, "cited": false, "brands": "", "bc": 0}, {"q": "What is Corporate Insurance and its Benefits Explained?", "vol": 839, "mentioned": false, "cited": false, "brands": "Tata AIG, Plum", "bc": 2}, {"q": "What is Waiting Period in Group Insurance: Full Guide?", "vol": 785, "mentioned": false, "cited": false, "brands": "Tata AIG, PolicyBazaar", "bc": 2}, {"q": "How To Compare Group Health Insurance?", "vol": 720, "mentioned": false, "cited": true, "brands": "Pazcare, Plum", "bc": 2}, {"q": "Types of group insurance policy plans available in India", "vol": 708, "mentioned": false, "cited": true, "brands": "", "bc": 0}, {"q": "Types Of Group Insurance Plans In India", "vol": 708, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "How to buy group mediclaim policy for a company in India?", "vol": 541, "mentioned": false, "cited": false, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Pazcare, Plum", "bc": 5}, {"q": "group mediclaim policy for startups in India: how to choose the right plan?", "vol": 541, "mentioned": false, "cited": false, "brands": "Pazcare, Plum", "bc": 2}, {"q": "Best group medical insurance providers for Indian companies", "vol": 539, "mentioned": false, "cited": false, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 9}, {"q": "Best group mediclaim policy providers for Indian companies", "vol": 539, "mentioned": false, "cited": false, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 9}, {"q": "What are the benefits of group health insurance policy for employees?", "vol": 530, "mentioned": false, "cited": true, "brands": "Tata AIG, Onsurity, GoDigit, InsuranceDekho", "bc": 4}, {"q": "What is group health insurance?", "vol": 530, "mentioned": false, "cited": false, "brands": "", "bc": 0}, {"q": "What does group medical insurance cover and what are common exclusions?", "vol": 530, "mentioned": false, "cited": false, "brands": "Pazcare, Onsurity", "bc": 2}, {"q": "What are the advantages and disadvantages of group medical insurance?", "vol": 530, "mentioned": true, "cited": true, "brands": "Acko, Plum", "bc": 2}, {"q": "What are the benefits of group health insurance?", "vol": 530, "mentioned": false, "cited": true, "brands": "Tata AIG", "bc": 1}, {"q": "What are the advantages and disadvantages of group health insurance policy?", "vol": 530, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "What are the benefits of group medical insurance for employees?", "vol": 530, "mentioned": false, "cited": true, "brands": "Tata AIG, InsuranceDekho", "bc": 2}, {"q": "What is AYUSH treatment in group health insurance?", "vol": 458, "mentioned": false, "cited": false, "brands": "Pazcare", "bc": 1}, {"q": "Best group health insurance policy providers for Indian companies", "vol": 412, "mentioned": false, "cited": false, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Plum, Niva Bupa, Care Health", "bc": 8}, {"q": "How can HR use group mediclaim policy to improve?", "vol": 404, "mentioned": false, "cited": false, "brands": "Pazcare", "bc": 1}, {"q": "What are the advantages and disadvantages of group mediclaim policy?", "vol": 404, "mentioned": false, "cited": false, "brands": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "Advantages Of Group Health Insurance", "vol": 404, "mentioned": true, "cited": true, "brands": "Acko, Tata AIG", "bc": 2}, {"q": "Pros and cons of group health insurance policy", "vol": 404, "mentioned": true, "cited": true, "brands": "Acko, Tata AIG", "bc": 2}, {"q": "Best group insurance scheme providers for Indian companies", "vol": 357, "mentioned": false, "cited": false, "brands": "Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 10}, {"q": "group insurance policy for 10 to 50 employees: what should employers know?", "vol": 326, "mentioned": false, "cited": true, "brands": "Plum", "bc": 1}, {"q": "What are the benefits of group insurance policy for employees?", "vol": 326, "mentioned": false, "cited": true, "brands": "Onsurity", "bc": 1}, {"q": "Benefits of Group Accident Insurance", "vol": 326, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "How to Choose the Best Group Insurance for Employees?", "vol": 326, "mentioned": false, "cited": true, "brands": "Onsurity", "bc": 1}, {"q": "What are the advantages and disadvantages of group insurance policy?", "vol": 326, "mentioned": false, "cited": false, "brands": "", "bc": 0}, {"q": "Types of group mediclaim policy plans available in India", "vol": 266, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "Types of group medical insurance plans available in India", "vol": 266, "mentioned": true, "cited": true, "brands": "Acko, Pazcare", "bc": 2}, {"q": "Types of group insurance scheme plans available in India", "vol": 266, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "Types of group health insurance policy plans available in India", "vol": 266, "mentioned": true, "cited": true, "brands": "Acko", "bc": 1}, {"q": "What are the best group mediclaim policies that cover employees and their families?", "vol": 208, "mentioned": true, "cited": false, "brands": "Acko, Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Niva Bupa, Care Health", "bc": 9}, {"q": "What are the benefits of group mediclaim policy for employees?", "vol": 208, "mentioned": false, "cited": false, "brands": "Pazcare", "bc": 1}, {"q": "Types of group health Insurance - Guide to understand GMC", "vol": 208, "mentioned": false, "cited": false, "brands": "Tata AIG, Pazcare", "bc": 2}, {"q": "What is Group Mediclaim for Employees and its Benefits?", "vol": 208, "mentioned": false, "cited": false, "brands": "", "bc": 0}, {"q": "What is group mediclaim policy and how does it work in India?", "vol": 208, "mentioned": false, "cited": false, "brands": "Pazcare, Plum", "bc": 2}, {"q": "What is the Co-Payment Clause in Group Health Insurance?", "vol": 190, "mentioned": false, "cited": false, "brands": "Plum", "bc": 1}, {"q": "Is it Smart to Buy Top-up Health Plan with Group Insurance?", "vol": 188, "mentioned": false, "cited": false, "brands": "Tata AIG, Star Health, Pazcare, Plum", "bc": 4}, {"q": "How to compare group health insurance policy policies for a growing company?", "vol": 152, "mentioned": false, "cited": false, "brands": "Pazcare, Plum", "bc": 2}, {"q": "Best group insurance policy providers for Indian companies", "vol": 145, "mentioned": false, "cited": false, "brands": "Tata AIG, PolicyBazaar, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Onsurity, Niva Bupa, Care Health", "bc": 11}, {"q": "Is Pre-Existing Disease Covered by Group Health Insurance?", "vol": 135, "mentioned": true, "cited": true, "brands": "Acko, PolicyBazaar, Pazcare", "bc": 3}, {"q": "Does group health insurance cover physiotherapy in India?", "vol": 132, "mentioned": false, "cited": false, "brands": "Star Health", "bc": 1}, {"q": "Is IPD covered in group health insurance?", "vol": 126, "mentioned": false, "cited": false, "brands": "PolicyBazaar, Pazcare", "bc": 2}, {"q": "group health insurance policy for startups in India: how to choose the right plan?", "vol": 119, "mentioned": true, "cited": true, "brands": "Acko, Tata AIG, Pazcare, Plum", "bc": 4}, {"q": "group insurance scheme for startups in India: how to choose the right plan?", "vol": 119, "mentioned": true, "cited": true, "brands": "Acko, Pazcare", "bc": 2}, {"q": "group medical insurance for startups in India: how to choose the right plan?", "vol": 119, "mentioned": true, "cited": true, "brands": "Acko, Tata AIG, Pazcare", "bc": 3}, {"q": "group mediclaim policy for 10 to 50 employees: what should employers know?", "vol": 117, "mentioned": false, "cited": false, "brands": "Pazcare, Plum", "bc": 2}, {"q": "group insurance policy claim process explained step by step", "vol": 114, "mentioned": false, "cited": false, "brands": "Tata AIG, Pazcare", "bc": 2}, {"q": "Best Group Health Insurance for your Employees", "vol": 98, "mentioned": false, "cited": false, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Bajaj Allianz, Star Health, Pazcare, Plum, Niva Bupa, Care Health", "bc": 9}, {"q": "group health insurance policy for 10 to 50 employees: what should employers know?", "vol": 96, "mentioned": false, "cited": false, "brands": "Tata AIG, Plum", "bc": 2}, {"q": "group medical insurance for 10 to 50 employees: what should employers know?", "vol": 96, "mentioned": false, "cited": true, "brands": "Pazcare", "bc": 1}, {"q": "How to buy group medical insurance for a company in India?", "vol": 86, "mentioned": false, "cited": false, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Pazcare, Plum", "bc": 5}, {"q": "How To Buy Health Insurance Policy For Employees In India?", "vol": 86, "mentioned": true, "cited": true, "brands": "Acko, Plum", "bc": 2}, {"q": "How to compare group insurance policy policies for a growing company?", "vol": 84, "mentioned": false, "cited": true, "brands": "", "bc": 0}, {"q": "How to buy group health insurance policy for a company in India?", "vol": 64, "mentioned": true, "cited": true, "brands": "Acko, ICICI Lombard, HDFC ERGO, Star Health, Pazcare, Plum, Onsurity", "bc": 7}, {"q": "How does group medical insurance work for employers in India?", "vol": 64, "mentioned": false, "cited": true, "brands": "Tata AIG, ICICI Lombard, HDFC ERGO, Plum", "bc": 4}, {"q": "How much does group health insurance policy cost per employee in India?", "vol": 64, "mentioned": false, "cited": false, "brands": "Plum", "bc": 1}, {"q": "How does group insurance policy work for employers in India?", "vol": 64, "mentioned": true, "cited": true, "brands": "Acko, Plum", "bc": 2}, {"q": "How much does group insurance policy cost per employee in India?", "vol": 64, "mentioned": false, "cited": false, "brands": "Plum", "bc": 1}, {"q": "How does group health insurance policy work for employers in India?", "vol": 64, "mentioned": false, "cited": false, "brands": "Plum", "bc": 1}, {"q": "How much does group insurance scheme cost per employee in India?", "vol": 64, "mentioned": false, "cited": true, "brands": "Plum", "bc": 1}, {"q": "How much does group medical insurance cost per employee in India?", "vol": 64, "mentioned": false, "cited": false, "brands": "Plum, Onsurity", "bc": 2}, {"q": "Difference between group insurance and ESI", "vol": 42, "mentioned": false, "cited": false, "brands": "Pazcare, Plum", "bc": 2}, {"q": "What Are GMC and GPA Insurance Policy?", "vol": 34, "mentioned": false, "cited": false, "brands": "Tata AIG", "bc": 1}, {"q": "Does Group Insurance Cover Pre Existing Disease?", "vol": 31, "mentioned": true, "cited": true, "brands": "Acko, PolicyBazaar, Pazcare", "bc": 3}, {"q": "group insurance policy for startups in India: how to choose the right plan?", "vol": 29, "mentioned": true, "cited": true, "brands": "Acko, Tata AIG, Pazcare", "bc": 3}, {"q": "How to compare group medical insurance policies for a growing company?", "vol": 27, "mentioned": false, "cited": true, "brands": "Niva Bupa", "bc": 1}, {"q": "group health insurance policy claim process explained step by step", "vol": 15, "mentioned": false, "cited": false, "brands": "Tata AIG, Pazcare", "bc": 2}, {"q": "group medical insurance claim process explained step by step", "vol": 15, "mentioned": false, "cited": false, "brands": "Tata AIG, Pazcare", "bc": 2}, {"q": "How to buy group insurance policy for a company in India?", "vol": 0, "mentioned": false, "cited": false, "brands": "PolicyBazaar, ICICI Lombard, HDFC ERGO, Star Health", "bc": 4}, {"q": "Is cancer covered in corporate health insurance in India?", "vol": 0, "mentioned": false, "cited": false, "brands": "Pazcare", "bc": 1}];
 const BRAND_MENTIONS = [{"brand": "Pazcare", "count": 44}, {"brand": "Plum", "count": 42}, {"brand": "Tata AIG", "count": 31}, {"brand": "Acko", "count": 24}, {"brand": "PolicyBazaar", "count": 17}, {"brand": "ICICI Lombard", "count": 13}, {"brand": "HDFC ERGO", "count": 13}, {"brand": "Onsurity", "count": 11}, {"brand": "Star Health", "count": 11}, {"brand": "Niva Bupa", "count": 9}, {"brand": "Bajaj Allianz", "count": 8}, {"brand": "Care Health", "count": 7}, {"brand": "InsuranceDekho", "count": 3}, {"brand": "GoDigit", "count": 1}];
+const KPI_HISTORY = {"2026-04-20": {"mentioned_count": 24, "mentioned_total": 100, "cited_count": 46, "cited_total": 100, "total_volume": 68186, "volume_reach": 16745}};
 
-let currentDate = "2026-04-18";
+let currentDate = "2026-04-20";
 let compareDate = null;
 let isComparing = false;
 
@@ -809,25 +818,98 @@ function calculateDelta(current, previous) {
   }
 }
 
+function findNearestKPI(date) {
+  // Find nearest KPI_HISTORY entry <= selected date
+  const dates = Object.keys(KPI_HISTORY).sort();
+  let best = null;
+  for (const d of dates) {
+    if (d <= date) best = d;
+  }
+  return best ? KPI_HISTORY[best] : null;
+}
+
+function showDelta(elId, current, previous, suffix) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const diff = current - previous;
+  if (diff > 0) {
+    el.textContent = `▲ +${diff}${suffix || ''}`;
+    el.className = 'delta up';
+  } else if (diff < 0) {
+    el.textContent = `▼ ${diff}${suffix || ''}`;
+    el.className = 'delta down';
+  } else {
+    el.textContent = `→ 0${suffix || ''}`;
+    el.className = 'delta';
+  }
+  el.style.display = 'block';
+}
+
+function hideDelta(elId) {
+  const el = document.getElementById(elId);
+  if (el) el.style.display = 'none';
+}
+
 function updateKPIs() {
   const ackoSoV = SOV_HISTORY[currentDate]["Acko"];
   const rank = getSoVRank(currentDate);
   const topComp = getTopCompetitor(currentDate);
 
   document.getElementById('kpiSoV').textContent = ackoSoV.toFixed(1) + '%';
-  document.getElementById('kpiSoVRank').textContent = `Rank #${rank} of 14 brands`;
+  document.getElementById('kpiSoVRank').textContent = `Rank #${rank} of ${Object.keys(SOV_HISTORY[currentDate]).length} brands`;
   document.getElementById('kpiTopCompetitor').textContent = topComp.name;
   document.getElementById('kpiTopCompetitorValue').textContent = topComp.value + '% SoV';
 
-  const deltaEl = document.getElementById('kpiSoVDelta');
+  // Update other KPI cards from KPI_HISTORY if available
+  const currentKPI = findNearestKPI(currentDate);
+  if (currentKPI) {
+    document.getElementById('kpiMentioned').textContent = `${currentKPI.mentioned_count}/${currentKPI.mentioned_total}`;
+    document.getElementById('kpiMentionedSub').textContent = `${Math.round(currentKPI.mentioned_count / currentKPI.mentioned_total * 100)}% of AI responses`;
+    document.getElementById('kpiCited').textContent = `${currentKPI.cited_count}/${currentKPI.cited_total}`;
+    document.getElementById('kpiCitedSub').textContent = `acko.com linked in ${Math.round(currentKPI.cited_count / currentKPI.cited_total * 100)}% responses`;
+    document.getElementById('kpiVolume').textContent = currentKPI.total_volume.toLocaleString();
+    document.getElementById('kpiVolumeSub').textContent = `Across ${currentKPI.mentioned_total} tracked prompts`;
+    document.getElementById('kpiReach').textContent = currentKPI.volume_reach.toLocaleString();
+    document.getElementById('kpiReachSub').textContent = `${Math.round(currentKPI.volume_reach / currentKPI.total_volume * 100)}% of total volume`;
+  }
+
+  // Deltas
   if (isComparing && compareDate) {
+    // SoV delta (always available from SOV_HISTORY)
     const compareSoV = SOV_HISTORY[compareDate]["Acko"];
-    const deltaTxt = calculateDelta(ackoSoV, compareSoV);
-    deltaEl.textContent = deltaTxt;
-    deltaEl.className = 'delta ' + (ackoSoV > compareSoV ? 'up' : ackoSoV < compareSoV ? 'down' : '');
-    deltaEl.style.display = 'block';
+    const sovDiff = (ackoSoV - compareSoV).toFixed(1);
+    const sovEl = document.getElementById('kpiSoVDelta');
+    if (sovDiff > 0) {
+      sovEl.textContent = `▲ +${sovDiff}pp`;
+      sovEl.className = 'delta up';
+    } else if (sovDiff < 0) {
+      sovEl.textContent = `▼ ${sovDiff}pp`;
+      sovEl.className = 'delta down';
+    } else {
+      sovEl.textContent = '→ 0pp';
+      sovEl.className = 'delta';
+    }
+    sovEl.style.display = 'block';
+
+    // Other KPI deltas (from KPI_HISTORY snapshots)
+    const compareKPI = findNearestKPI(compareDate);
+    if (currentKPI && compareKPI) {
+      showDelta('kpiMentionedDelta', currentKPI.mentioned_count, compareKPI.mentioned_count, '');
+      showDelta('kpiCitedDelta', currentKPI.cited_count, compareKPI.cited_count, '');
+      showDelta('kpiVolumeDelta', currentKPI.total_volume, compareKPI.total_volume, '');
+      showDelta('kpiReachDelta', currentKPI.volume_reach, compareKPI.volume_reach, '');
+    } else {
+      hideDelta('kpiMentionedDelta');
+      hideDelta('kpiCitedDelta');
+      hideDelta('kpiVolumeDelta');
+      hideDelta('kpiReachDelta');
+    }
   } else {
-    deltaEl.style.display = 'none';
+    hideDelta('kpiSoVDelta');
+    hideDelta('kpiMentionedDelta');
+    hideDelta('kpiCitedDelta');
+    hideDelta('kpiVolumeDelta');
+    hideDelta('kpiReachDelta');
   }
 }
 
@@ -895,7 +977,7 @@ function renderPrompts(data) {
     const tbody = document.getElementById('promptsTableBody');
     tbody.innerHTML = data.map((item, idx) => `
         <tr>
-            <td style="font-size: 0.85rem;">${item.q.substring(0, 50)}...</td>
+            <td style="font-size: 0.85rem;">${item.q}</td>
             <td><span class="volume-badge">${item.vol.toLocaleString()}</span></td>
             <td><span class="badge ${item.mentioned ? 'badge-yes' : 'badge-no'}">${item.mentioned ? 'YES' : 'NO'}</span></td>
             <td><span class="badge ${item.cited ? 'badge-yes' : 'badge-no'}">${item.cited ? 'YES' : 'NO'}</span></td>
