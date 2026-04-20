@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # ─── CONFIG ───
-API_KEY = os.environ.get("AHREFS_API_KEY", "")
+API_KEY = os.environ.get("ShbugPaZgMtWKeSNf_uPNIZFreKsLIXJzQ6LSbJ-", "")
 REPORT_ID = "019c2715-499d-7f4a-8ff5-ee535e0b7c65"
 BRAND = "Acko"
 COMPETITORS = "GoDigit,Tata AIG,PolicyBazaar,InsuranceDekho,ICICI Lombard,HDFC ERGO,Bajaj Allianz,star health,pazcare,plumhq,onsurity,manipal cigna,ekincare,care health,niva bupa"
@@ -21,7 +21,7 @@ BRAND_LIST = ["Acko","Tata AIG","PolicyBazaar","ICICI Lombard","HDFC ERGO","Baja
               "Star Health","Pazcare","Plum","Onsurity","Niva Bupa","Care Health","GoDigit","InsuranceDekho"]
 
 today = datetime.now().strftime("%Y-%m-%d")
-week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+week_ago = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
 
 def api(endpoint, params):
     params["report_id"] = REPORT_ID
@@ -113,6 +113,29 @@ brand_mentions_sorted = sorted(brand_text_mentions.items(), key=lambda x: -x[1])
 
 print(f"Processed: {total_q} prompts, ACKO SoV={acko_sov}%, mentioned in {acko_mentioned_count}")
 
+# ─── KPI HISTORY (accumulates across weekly runs) ───
+kpi_history_file = "kpi_history.json"
+kpi_history = {}
+if os.path.exists(kpi_history_file):
+    with open(kpi_history_file) as f:
+        kpi_history = json.load(f)
+
+kpi_history[today] = {
+    "mentioned_count": acko_mentioned_count,
+    "mentioned_total": total_q,
+    "cited_count": acko_cited_count,
+    "cited_total": total_q,
+    "total_volume": total_volume,
+    "volume_reach": acko_volume
+}
+
+with open(kpi_history_file, "w") as f:
+    json.dump(kpi_history, f, indent=2)
+
+print(f"KPI history: {len(kpi_history)} snapshots saved to {kpi_history_file}")
+
+kpi_history_json = json.dumps(kpi_history)
+
 # ─── GENERATE HTML ───
 
 # Build date options for selects
@@ -182,7 +205,7 @@ wins = [q for q in questions if q["m"] and q["c"]][:15]
 gap_rows = ""
 for q in gaps:
     gap_rows += f'''<tr>
-<td style="font-size: 0.85rem;">{q["q"][:50]}...</td>
+<td style="font-size: 0.85rem;">{q["q"]}</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">{q["vol"]}</span></td>
 <td style="font-size: 0.8rem;">{q["b"]}</td>
 </tr>'''
@@ -190,7 +213,7 @@ for q in gaps:
 win_rows = ""
 for q in wins:
     win_rows += f'''<tr>
-<td style="font-size: 0.85rem;">{q["q"][:50]}...</td>
+<td style="font-size: 0.85rem;">{q["q"]}</td>
 <td><span style="display: inline-block; background: #374151; color: #9ca3af; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; white-space: nowrap;">{q["vol"]}</span></td>
 </tr>'''
 
@@ -566,23 +589,27 @@ html = f'''<!DOCTYPE html>
             </div>
             <div class="kpi-card">
                 <div class="label">ACKO Mentioned In</div>
-                <div class="value">{acko_mentioned_count}/{total_q}</div>
-                <div class="subtext">{acko_mentioned_count/total_q*100:.0f}% of AI responses</div>
+                <div class="value" id="kpiMentioned">{acko_mentioned_count}/{total_q}</div>
+                <div class="subtext" id="kpiMentionedSub">{acko_mentioned_count/total_q*100:.0f}% of AI responses</div>
+                <div class="delta" id="kpiMentionedDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">ACKO Cited In</div>
-                <div class="value">{acko_cited_count}/{total_q}</div>
-                <div class="subtext">acko.com linked in {acko_cited_count/total_q*100:.0f}% responses</div>
+                <div class="value" id="kpiCited">{acko_cited_count}/{total_q}</div>
+                <div class="subtext" id="kpiCitedSub">acko.com linked in {acko_cited_count/total_q*100:.0f}% responses</div>
+                <div class="delta" id="kpiCitedDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">Total AI Search Volume</div>
-                <div class="value">{total_volume:,}</div>
-                <div class="subtext">Across {total_q} tracked prompts</div>
+                <div class="value" id="kpiVolume">{total_volume:,}</div>
+                <div class="subtext" id="kpiVolumeSub">Across {total_q} tracked prompts</div>
+                <div class="delta" id="kpiVolumeDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">ACKO Volume Reach</div>
-                <div class="value">{acko_volume:,}</div>
-                <div class="subtext">{acko_volume/total_volume*100:.0f}% of total volume</div>
+                <div class="value" id="kpiReach">{acko_volume:,}</div>
+                <div class="subtext" id="kpiReachSub">{acko_volume/total_volume*100:.0f}% of total volume</div>
+                <div class="delta" id="kpiReachDelta" style="display: none;"></div>
             </div>
             <div class="kpi-card">
                 <div class="label">Top Competitor</div>
@@ -717,6 +744,7 @@ html = f'''<!DOCTYPE html>
 const SOV_HISTORY = {sov_history_json};
 const QUESTIONS = {questions_json};
 const BRAND_MENTIONS = {bm_data};
+const KPI_HISTORY = {kpi_history_json};
 
 let currentDate = "{dates_sorted[-1]}";
 let compareDate = null;
@@ -790,25 +818,98 @@ function calculateDelta(current, previous) {{
   }}
 }}
 
+function findNearestKPI(date) {{
+  // Find nearest KPI_HISTORY entry <= selected date
+  const dates = Object.keys(KPI_HISTORY).sort();
+  let best = null;
+  for (const d of dates) {{
+    if (d <= date) best = d;
+  }}
+  return best ? KPI_HISTORY[best] : null;
+}}
+
+function showDelta(elId, current, previous, suffix) {{
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const diff = current - previous;
+  if (diff > 0) {{
+    el.textContent = `▲ +${{diff}}${{suffix || ''}}`;
+    el.className = 'delta up';
+  }} else if (diff < 0) {{
+    el.textContent = `▼ ${{diff}}${{suffix || ''}}`;
+    el.className = 'delta down';
+  }} else {{
+    el.textContent = `→ 0${{suffix || ''}}`;
+    el.className = 'delta';
+  }}
+  el.style.display = 'block';
+}}
+
+function hideDelta(elId) {{
+  const el = document.getElementById(elId);
+  if (el) el.style.display = 'none';
+}}
+
 function updateKPIs() {{
   const ackoSoV = SOV_HISTORY[currentDate]["Acko"];
   const rank = getSoVRank(currentDate);
   const topComp = getTopCompetitor(currentDate);
 
   document.getElementById('kpiSoV').textContent = ackoSoV.toFixed(1) + '%';
-  document.getElementById('kpiSoVRank').textContent = `Rank #${{rank}} of 14 brands`;
+  document.getElementById('kpiSoVRank').textContent = `Rank #${{rank}} of ${{Object.keys(SOV_HISTORY[currentDate]).length}} brands`;
   document.getElementById('kpiTopCompetitor').textContent = topComp.name;
   document.getElementById('kpiTopCompetitorValue').textContent = topComp.value + '% SoV';
 
-  const deltaEl = document.getElementById('kpiSoVDelta');
+  // Update other KPI cards from KPI_HISTORY if available
+  const currentKPI = findNearestKPI(currentDate);
+  if (currentKPI) {{
+    document.getElementById('kpiMentioned').textContent = `${{currentKPI.mentioned_count}}/${{currentKPI.mentioned_total}}`;
+    document.getElementById('kpiMentionedSub').textContent = `${{Math.round(currentKPI.mentioned_count / currentKPI.mentioned_total * 100)}}% of AI responses`;
+    document.getElementById('kpiCited').textContent = `${{currentKPI.cited_count}}/${{currentKPI.cited_total}}`;
+    document.getElementById('kpiCitedSub').textContent = `acko.com linked in ${{Math.round(currentKPI.cited_count / currentKPI.cited_total * 100)}}% responses`;
+    document.getElementById('kpiVolume').textContent = currentKPI.total_volume.toLocaleString();
+    document.getElementById('kpiVolumeSub').textContent = `Across ${{currentKPI.mentioned_total}} tracked prompts`;
+    document.getElementById('kpiReach').textContent = currentKPI.volume_reach.toLocaleString();
+    document.getElementById('kpiReachSub').textContent = `${{Math.round(currentKPI.volume_reach / currentKPI.total_volume * 100)}}% of total volume`;
+  }}
+
+  // Deltas
   if (isComparing && compareDate) {{
+    // SoV delta (always available from SOV_HISTORY)
     const compareSoV = SOV_HISTORY[compareDate]["Acko"];
-    const deltaTxt = calculateDelta(ackoSoV, compareSoV);
-    deltaEl.textContent = deltaTxt;
-    deltaEl.className = 'delta ' + (ackoSoV > compareSoV ? 'up' : ackoSoV < compareSoV ? 'down' : '');
-    deltaEl.style.display = 'block';
+    const sovDiff = (ackoSoV - compareSoV).toFixed(1);
+    const sovEl = document.getElementById('kpiSoVDelta');
+    if (sovDiff > 0) {{
+      sovEl.textContent = `▲ +${{sovDiff}}pp`;
+      sovEl.className = 'delta up';
+    }} else if (sovDiff < 0) {{
+      sovEl.textContent = `▼ ${{sovDiff}}pp`;
+      sovEl.className = 'delta down';
+    }} else {{
+      sovEl.textContent = '→ 0pp';
+      sovEl.className = 'delta';
+    }}
+    sovEl.style.display = 'block';
+
+    // Other KPI deltas (from KPI_HISTORY snapshots)
+    const compareKPI = findNearestKPI(compareDate);
+    if (currentKPI && compareKPI) {{
+      showDelta('kpiMentionedDelta', currentKPI.mentioned_count, compareKPI.mentioned_count, '');
+      showDelta('kpiCitedDelta', currentKPI.cited_count, compareKPI.cited_count, '');
+      showDelta('kpiVolumeDelta', currentKPI.total_volume, compareKPI.total_volume, '');
+      showDelta('kpiReachDelta', currentKPI.volume_reach, compareKPI.volume_reach, '');
+    }} else {{
+      hideDelta('kpiMentionedDelta');
+      hideDelta('kpiCitedDelta');
+      hideDelta('kpiVolumeDelta');
+      hideDelta('kpiReachDelta');
+    }}
   }} else {{
-    deltaEl.style.display = 'none';
+    hideDelta('kpiSoVDelta');
+    hideDelta('kpiMentionedDelta');
+    hideDelta('kpiCitedDelta');
+    hideDelta('kpiVolumeDelta');
+    hideDelta('kpiReachDelta');
   }}
 }}
 
@@ -876,7 +977,7 @@ function renderPrompts(data) {{
     const tbody = document.getElementById('promptsTableBody');
     tbody.innerHTML = data.map((item, idx) => `
         <tr>
-            <td style="font-size: 0.85rem;">${{item.q.substring(0, 50)}}...</td>
+            <td style="font-size: 0.85rem;">${{item.q}}</td>
             <td><span class="volume-badge">${{item.vol.toLocaleString()}}</span></td>
             <td><span class="badge ${{item.mentioned ? 'badge-yes' : 'badge-no'}}">${{item.mentioned ? 'YES' : 'NO'}}</span></td>
             <td><span class="badge ${{item.cited ? 'badge-yes' : 'badge-no'}}">${{item.cited ? 'YES' : 'NO'}}</span></td>
