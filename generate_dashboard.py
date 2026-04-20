@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # ─── CONFIG ───
-API_KEY = os.environ.get("ShbugPaZgMtWKeSNf_uPNIZFreKsLIXJzQ6LSbJ-", "")
+API_KEY = os.environ.get("AHREFS_API_KEY", "")
 REPORT_ID = "019c2715-499d-7f4a-8ff5-ee535e0b7c65"
 BRAND = "Acko"
 COMPETITORS = "GoDigit,Tata AIG,PolicyBazaar,InsuranceDekho,ICICI Lombard,HDFC ERGO,Bajaj Allianz,star health,pazcare,plumhq,onsurity,manipal cigna,ekincare,care health,niva bupa"
