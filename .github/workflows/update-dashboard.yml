@@ -4,27 +4,22 @@ name: Update GEO Dashboard
 on:
   schedule:
     - cron: '30 0 * * 1'
-  workflow_dispatch:  # Allows manual trigger from GitHub UI
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
         run: pip install requests
-
       - name: Generate dashboard and send email
         env:
           AHREFS_API_KEY: ${{ secrets.AHREFS_API_KEY }}
@@ -35,7 +30,6 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           DASHBOARD_URL: "https://aloke-acko.github.io/acko-geo-dashboard/"
         run: python generate_dashboard.py
-
       - name: Commit and push
         run: |
           git config user.name "GitHub Actions Bot"
@@ -43,3 +37,34 @@ jobs:
           git add index.html kpi_history.json
           git diff --staged --quiet || git commit -m "Update dashboard $(date +%Y-%m-%d)"
           git push
+
+  # Alert on failure — sends email so you know immediately
+  alert-on-failure:
+    runs-on: ubuntu-latest
+    needs: update
+    if: failure()
+    steps:
+      - name: Send failure alert email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASS }}
+          subject: "ALERT: GEO Dashboard update FAILED — ${{ github.run_id }}"
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.SMTP_USER }}
+          body: |
+            The weekly GEO Dashboard update failed.
+
+            Workflow: ${{ github.workflow }}
+            Run ID: ${{ github.run_id }}
+            Run URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Time: ${{ github.event.head_commit.timestamp || 'Scheduled run' }}
+
+            Common causes:
+            1. Ahrefs API key expired or units exhausted
+            2. Ahrefs API response format changed
+            3. SMTP credentials expired
+
+            Action required: Click the Run URL above to check logs, fix the issue, then manually re-run.
