@@ -16,11 +16,11 @@
     "volume_reach": 15766
   },
   "2026-05-04": {
-    "mentioned_count": 16,
+    "mentioned_count": 15,
     "mentioned_total": 100,
-    "cited_count": 39,
+    "cited_count": 37,
     "cited_total": 100,
-    "total_volume": 68379,
-    "volume_reach": 15766
+    "total_volume": 68364,
+    "volume_reach": 15236
   }
 }
