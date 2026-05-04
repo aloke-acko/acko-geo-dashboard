@@ -1,0 +1,22 @@
+name: Keep Repo Alive
+
+# Prevents GitHub from auto-disabling scheduled workflows
+# GitHub disables cron workflows after 60 days of repo inactivity
+# This runs every 50 days to keep the repo "active"
+
+on:
+  schedule:
+    - cron: '0 12 * * 3'  # Every Wednesday at 12:00 UTC (5:30 PM IST)
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Keep workflow alive
+        uses: liskin/gh-workflow-keepalive@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
