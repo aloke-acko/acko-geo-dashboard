@@ -80,6 +80,72 @@ for day in sov_hist_raw.get("metrics", []):
         if entry["brand"] != "Any brand":
             sov_history[date_str][entry["brand"]] = round(entry["share_of_voice"] * 100, 1)
 
+# ─── BACKFILL KPI_HISTORY for all weekly SOV dates ───
+# Build weekly date list (same bucketing used for the date picker)
+_weekly_dates = {}
+for date_str in sorted(sov_history.keys()):
+    dt = datetime.strptime(date_str, "%Y-%m-%d")
+    iso_year, iso_week, _ = dt.isocalendar()
+    wk = f"{iso_year}-W{iso_week:02d}"
+    _weekly_dates[wk] = date_str  # keeps latest date per week
+
+backfill_dates = [d for d in _weekly_dates.values() if d not in kpi_history and d != today]
+if backfill_dates:
+    print(f"Backfilling KPI history for {len(backfill_dates)} historical dates...")
+    for bf_date in sorted(backfill_dates):
+        print(f"  Pulling ai-responses for {bf_date}...")
+        try:
+            bf_raw = api("brand-radar/ai-responses", {
+                "select": "search_queries,links,volume,data_source,tags,question,response,country",
+                "date": bf_date, "limit": "200"
+            })
+            bf_responses = bf_raw.get("ai_responses", [])
+            # Process + dedup (same logic as current-day processing)
+            bf_seen = {}
+            for r in bf_responses:
+                q = r.get("question", "")
+                resp_text = r.get("response", "")
+                vol = r.get("volume", 0) or 0
+                links = r.get("links", [])
+                acko_c = any("acko.com" in (l.get("url", "")).lower() for l in links)
+                acko_m = "acko" in resp_text.lower()
+                key = q.strip().lower()
+                entry = {"q": q, "vol": vol, "m": acko_m, "c": acko_c}
+                if key not in bf_seen:
+                    bf_seen[key] = entry
+                else:
+                    prev = bf_seen[key]
+                    if entry["m"] and not prev["m"]:
+                        bf_seen[key] = entry
+                    elif entry["c"] and not prev["c"] and not (prev["m"] and not entry["m"]):
+                        bf_seen[key] = entry
+            bf_qs = list(bf_seen.values())
+            bf_total = len(bf_qs)
+            bf_ment = sum(1 for q in bf_qs if q["m"])
+            bf_cite = sum(1 for q in bf_qs if q["c"])
+            bf_vol = sum(q["vol"] for q in bf_qs)
+            bf_vr = sum(q["vol"] for q in bf_qs if q["m"])
+            # Also store SoV from sov_history for this date
+            bf_sov = sov_history.get(bf_date, {}).get("Acko", 0)
+            kpi_history[bf_date] = {
+                "sov": bf_sov,
+                "mentioned_count": bf_ment,
+                "mentioned_total": bf_total,
+                "cited_count": bf_cite,
+                "cited_total": bf_total,
+                "total_volume": bf_vol,
+                "volume_reach": bf_vr
+            }
+            print(f"    → {bf_total} prompts, mentioned={bf_ment}, cited={bf_cite}, vol={bf_vol}")
+        except Exception as e:
+            print(f"    → SKIP (error: {e})")
+    # Save backfilled data immediately
+    with open(kpi_history_file, "w") as f:
+        json.dump(kpi_history, f, indent=2)
+    print(f"Backfill complete. KPI history now has {len(kpi_history)} snapshots.")
+else:
+    print(f"KPI history already complete for all {len(_weekly_dates)} weekly dates.")
+
 print("Pulling mentions...")
 mentions_raw = api("brand-radar/mentions-overview", {"select": "brand,total,only_target_brand,only_competitors_brands,target_and_competitors_brands"})
 mentions = sorted(
