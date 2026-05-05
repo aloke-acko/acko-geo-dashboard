@@ -1,7 +1,7 @@
 """
 ACKO GMC AI Visibility Dashboard Generator
 Calls Ahrefs Brand Radar API, processes data, generates HTML dashboard + email summary.
-Runs weekly via GitHub Actions.
+Runs daily via GitHub Actions. Uses smart-check: pulls SoV first, skips full refresh if unchanged.
 """
 import requests, json, os, sys, smtplib
 from datetime import datetime, timedelta
@@ -34,14 +34,41 @@ def api(endpoint, params):
     r.raise_for_status()
     return r.json()
 
-# ─── PULL DATA ───
-print("Pulling SoV overview...")
+# ─── SMART CHECK: compare SoV with last known value ───
+print("Smart check: pulling SoV overview (1 API call)...")
 sov_raw = api("brand-radar/sov-overview", {"select": "brand,share_of_voice"})
 sov = sorted(
     [{"brand": m["brand"], "sov": round(m["share_of_voice"] * 100, 1)}
      for m in sov_raw["metrics"] if m["brand"] != "Any brand"],
     key=lambda x: -x["sov"]
 )
+acko_sov_current = next((s["sov"] for s in sov if s["brand"] == "Acko"), 0)
+
+kpi_history_file = "kpi_history.json"
+kpi_history = {}
+if os.path.exists(kpi_history_file):
+    with open(kpi_history_file) as f:
+        kpi_history = json.load(f)
+
+last_date = max(kpi_history.keys()) if kpi_history else None
+last_sov = kpi_history.get(last_date, {}).get("sov") if last_date else None
+last_mentioned = kpi_history.get(last_date, {}).get("mentioned_count") if last_date else None
+
+force_refresh = os.environ.get("FORCE_REFRESH", "").lower() in ("1", "true", "yes")
+
+if not force_refresh and last_sov is not None and last_sov == acko_sov_current and last_date == today:
+    print(f"No change detected. SoV still {acko_sov_current}%, last updated {last_date}. Skipping full refresh.")
+    sys.exit(0)
+
+if last_sov is not None and last_sov != acko_sov_current:
+    print(f"SoV changed: {last_sov}% → {acko_sov_current}%. Running full refresh.")
+elif last_date != today:
+    print(f"New day ({today} vs last {last_date}). Running full refresh.")
+else:
+    print(f"Force refresh requested. Running full refresh.")
+
+# ─── PULL REMAINING DATA (only if SoV changed or new day) ───
+# SoV overview already pulled above in smart check
 
 print("Pulling SoV history...")
 sov_hist_raw = api("brand-radar/sov-history", {"date_from": week_ago, "date_to": today})
@@ -76,7 +103,7 @@ resp_raw = api("brand-radar/ai-responses", {
 ai_responses = resp_raw.get("ai_responses", [])
 
 # ─── PROCESS PROMPT DATA ───
-questions = []
+questions_raw = []
 for r in ai_responses:
     q = r.get("question", "")
     resp_text = r.get("response", "")
@@ -85,11 +112,25 @@ for r in ai_responses:
     acko_cited = any("acko.com" in (l.get("url", "")).lower() for l in links)
     acko_mentioned = "acko" in resp_text.lower()
     brands_found = [b for b in BRAND_LIST if b.lower() in resp_text.lower()]
-    questions.append({
+    questions_raw.append({
         "q": q, "vol": vol, "m": acko_mentioned, "c": acko_cited,
         "b": ", ".join(brands_found), "bc": len(brands_found)
     })
 
+# Deduplicate: keep one entry per unique prompt, prefer mentioned/cited=True
+seen = {}
+for entry in questions_raw:
+    key = entry["q"].strip().lower()
+    if key not in seen:
+        seen[key] = entry
+    else:
+        prev = seen[key]
+        if entry["m"] and not prev["m"]:
+            seen[key] = entry
+        elif entry["c"] and not prev["c"] and not (prev["m"] and not entry["m"]):
+            seen[key] = entry
+
+questions = list(seen.values())
 questions.sort(key=lambda x: -x["vol"])
 
 total_q = len(questions)
@@ -121,6 +162,7 @@ if os.path.exists(kpi_history_file):
         kpi_history = json.load(f)
 
 kpi_history[today] = {
+    "sov": acko_sov,
     "mentioned_count": acko_mentioned_count,
     "mentioned_total": total_q,
     "cited_count": acko_cited_count,
@@ -1154,6 +1196,7 @@ window.ACKO_SVG = `<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.or
 
 
 window.SOV_HISTORY = SOV_HISTORY_PLACEHOLDER;
+window.KPI_HISTORY = KPI_HISTORY_PLACEHOLDER;
 </script>
 
 <script type="text/babel">
@@ -1292,12 +1335,12 @@ function InfoTip({text}) {
 }
 
 // ─── KPI ───
-function Kpi({ label, value, caption, isAcko, sparkSeed, sparkTrend, delta, deltaDir }) {
+function Kpi({ label, value, caption, isAcko, sparkSeed, sparkTrend, delta, deltaDir, info }) {
   const valNode = typeof value === 'string' && value.includes('%')
     ? <>{value.replace('%','')}<span className="unit">%</span></> : value;
   const isText = typeof value === 'string' && (value.includes('/') || /[A-Za-z]/.test(value));
   return <div className={'kpi '+(isAcko?'acko':'')}>
-    <div className="kpi-label">{isAcko && <span className="dot"/>}{label}</div>
+    <div className="kpi-label">{isAcko && <span className="dot"/>}{label}{info && <InfoTip text={info}/>}</div>
     <div className={'kpi-value '+(isText?'text':'')}>{valNode}</div>
     <Sparkline seed={sparkSeed} trend={sparkTrend} color={isAcko?'var(--acko-400)':'var(--info)'}/>
     <div className="kpi-caption"><span>{caption}</span>
@@ -1312,11 +1355,22 @@ function KpiGrid() {
   const [periodB] = window.__periodB || [null];
   const [comparing] = window.__comparing || [false];
 
-  // Compute SoV from selected period
+  // ─── Helper: get KPI snapshot for a date (from KPI_HISTORY) ───
+  const getKpi = (date) => {
+    if(!date || !window.KPI_HISTORY) return null;
+    // Find exact match or closest earlier date
+    if(window.KPI_HISTORY[date]) return window.KPI_HISTORY[date];
+    const dates = Object.keys(window.KPI_HISTORY).sort();
+    const earlier = dates.filter(d => d <= date);
+    return earlier.length ? window.KPI_HISTORY[earlier[earlier.length-1]] : null;
+  };
+  const kpiA = getKpi(periodA);
+  const kpiB = comparing ? getKpi(periodB) : null;
+
+  // ─── SoV ───
   const sovA = periodA && window.SOV_HISTORY[periodA] ? window.SOV_HISTORY[periodA]["Acko"] : k.shareOfVoice.value;
   const sovB = periodB && comparing && window.SOV_HISTORY[periodB] ? window.SOV_HISTORY[periodB]["Acko"] : null;
 
-  // Compute rank from selected period
   const getRank = (date) => {
     if(!date || !window.SOV_HISTORY[date]) return null;
     const sorted = Object.entries(window.SOV_HISTORY[date]).sort((a,b)=>b[1]-a[1]);
@@ -1325,7 +1379,46 @@ function KpiGrid() {
   const rankA = getRank(periodA);
   const sovCaption = rankA ? `Rank #${rankA.rank} of ${rankA.total} brands` : k.shareOfVoice.caption;
 
-  // Top competitor from selected period
+  const sovDelta = comparing && sovB !== null ? (sovA - sovB).toFixed(1) : null;
+  const sovDeltaDir = sovDelta > 0 ? 'up' : sovDelta < 0 ? 'down' : null;
+
+  // ─── Mentioned ───
+  const mentA = kpiA ? kpiA.mentioned_count : parseInt(k.mentioned.value);
+  const mentTotalA = kpiA ? kpiA.mentioned_total : parseInt(k.mentioned.value.split('/')[1]);
+  const mentVal = `${mentA}/${mentTotalA}`;
+  const mentPct = mentTotalA > 0 ? Math.round(mentA/mentTotalA*100) : 0;
+  const mentCaption = `${mentPct}% of AI responses`;
+  const mentDeltaRaw = comparing && kpiB ? mentA - kpiB.mentioned_count : (k.mentioned.delta ? parseInt(k.mentioned.delta) : null);
+  const mentDelta = mentDeltaRaw !== null && mentDeltaRaw !== 0 ? (mentDeltaRaw > 0 ? '+' : '') + mentDeltaRaw : null;
+  const mentDeltaDir = mentDeltaRaw > 0 ? 'up' : mentDeltaRaw < 0 ? 'down' : null;
+
+  // ─── Cited ───
+  const citeA = kpiA ? kpiA.cited_count : parseInt(k.cited.value);
+  const citeTotalA = kpiA ? kpiA.cited_total : parseInt(k.cited.value.split('/')[1]);
+  const citeVal = `${citeA}/${citeTotalA}`;
+  const citePct = citeTotalA > 0 ? Math.round(citeA/citeTotalA*100) : 0;
+  const citeCaption = `acko.com linked in ${citePct}% responses`;
+  const citeDeltaRaw = comparing && kpiB ? citeA - kpiB.cited_count : (k.cited.delta ? parseInt(k.cited.delta) : null);
+  const citeDelta = citeDeltaRaw !== null && citeDeltaRaw !== 0 ? (citeDeltaRaw > 0 ? '+' : '') + citeDeltaRaw : null;
+  const citeDeltaDir = citeDeltaRaw > 0 ? 'up' : citeDeltaRaw < 0 ? 'down' : null;
+
+  // ─── Total AI Search Volume ───
+  const volA = kpiA ? kpiA.total_volume : k.aiSearchVol.value;
+  const volTotalA = kpiA ? kpiA.mentioned_total : parseInt(String(k.aiSearchVol.caption).match(/\\d+/)?.[0] || '0');
+  const volCaption = `Across ${volTotalA} tracked prompts`;
+  const volDeltaRaw = comparing && kpiB ? volA - kpiB.total_volume : null;
+  const volDelta = volDeltaRaw !== null && volDeltaRaw !== 0 ? (volDeltaRaw > 0 ? '+' : '') + fmtNum(Math.abs(volDeltaRaw)) : null;
+  const volDeltaDir = volDeltaRaw > 0 ? 'up' : volDeltaRaw < 0 ? 'down' : null;
+
+  // ─── Volume Reach ───
+  const vrA = kpiA ? kpiA.volume_reach : k.volumeReach.value;
+  const vrPct = volA > 0 ? Math.round(vrA/volA*100) : 0;
+  const vrCaption = `${vrPct}% of total volume`;
+  const vrDeltaRaw = comparing && kpiB ? vrA - kpiB.volume_reach : (k.volumeReach.delta ? parseInt(String(k.volumeReach.delta).replace(/,/g,'')) : null);
+  const vrDelta = vrDeltaRaw !== null && vrDeltaRaw !== 0 ? (vrDeltaRaw > 0 ? '+' : '') + fmtNum(Math.abs(vrDeltaRaw)) : null;
+  const vrDeltaDir = vrDeltaRaw > 0 ? 'up' : vrDeltaRaw < 0 ? 'down' : null;
+
+  // ─── Top Competitor ───
   const getTopComp = (date) => {
     if(!date || !window.SOV_HISTORY[date]) return null;
     const sorted = Object.entries(window.SOV_HISTORY[date]).sort((a,b)=>b[1]-a[1]);
@@ -1333,20 +1426,16 @@ function KpiGrid() {
   };
   const topA = getTopComp(periodA);
   const topB = getTopComp(periodB);
-
-  // Delta computation
-  const sovDelta = comparing && sovB !== null ? (sovA - sovB).toFixed(1) : null;
-  const sovDeltaDir = sovDelta > 0 ? 'up' : sovDelta < 0 ? 'down' : null;
   const topDelta = comparing && topA && topB ? (parseFloat(topA.sov) - parseFloat(topB.sov)).toFixed(1) : null;
   const topDeltaDir = topDelta > 0 ? 'up' : topDelta < 0 ? 'down' : null;
 
   return <div className="kpi-grid">
-    <Kpi label="ACKO Share of Voice" value={sovA.toFixed?sovA.toFixed(1)+'%':sovA+'%'} caption={sovCaption} isAcko sparkSeed={1} sparkTrend={sovDeltaDir||"flat"} delta={sovDelta?sovDelta+'pp':null} deltaDir={sovDeltaDir}/>
-    <Kpi label="ACKO Mentioned" value={k.mentioned.value} caption={k.mentioned.caption} isAcko sparkSeed={2} sparkTrend={k.mentioned.deltaDir||"flat"} delta={k.mentioned.delta||null} deltaDir={k.mentioned.deltaDir||null}/>
-    <Kpi label="ACKO Cited" value={k.cited.value} caption={k.cited.caption} isAcko sparkSeed={3} sparkTrend={k.cited.deltaDir||"flat"} delta={k.cited.delta||null} deltaDir={k.cited.deltaDir||null}/>
-    <Kpi label="Total AI Search Volume" value={fmtNum(k.aiSearchVol.value)} caption={k.aiSearchVol.caption} sparkSeed={4} sparkTrend="flat"/>
-    <Kpi label="ACKO Volume Reach" value={fmtNum(k.volumeReach.value)} caption={k.volumeReach.caption} isAcko sparkSeed={5} sparkTrend={k.volumeReach.deltaDir||"flat"} delta={k.volumeReach.delta||null} deltaDir={k.volumeReach.deltaDir||null}/>
-    <Kpi label="Top Competitor" value={topA?topA.name:k.topCompetitor.value} caption={topA?topA.sov+'% SoV':k.topCompetitor.caption} sparkSeed={6} sparkTrend={topDeltaDir||"flat"} delta={topDelta?topDelta+'pp':null} deltaDir={topDeltaDir}/>
+    <Kpi label="ACKO Share of Voice" value={sovA.toFixed?sovA.toFixed(1)+'%':sovA+'%'} caption={sovCaption} isAcko sparkSeed={1} sparkTrend={sovDeltaDir||"flat"} delta={sovDelta?sovDelta+'pp':null} deltaDir={sovDeltaDir} info="Percentage of all AI-generated responses (across tracked prompts) where ACKO appears, relative to all brand appearances. Higher SoV = ACKO dominates more AI conversations."/>
+    <Kpi label="ACKO Mentioned" value={mentVal} caption={mentCaption} isAcko sparkSeed={2} sparkTrend={mentDeltaDir||"flat"} delta={mentDelta} deltaDir={mentDeltaDir} info="Number of tracked AI prompts where 'ACKO' is explicitly named in the response text. Format: mentioned / total prompts tracked."/>
+    <Kpi label="ACKO Cited" value={citeVal} caption={citeCaption} isAcko sparkSeed={3} sparkTrend={citeDeltaDir||"flat"} delta={citeDelta} deltaDir={citeDeltaDir} info="Number of tracked AI prompts where acko.com is linked as a source in the response. Being cited means the AI treats ACKO's content as authoritative."/>
+    <Kpi label="Total AI Search Volume" value={fmtNum(volA)} caption={volCaption} sparkSeed={4} sparkTrend={volDeltaDir||"flat"} delta={volDelta} deltaDir={volDeltaDir} info="Combined monthly search volume of all tracked prompts. Represents the total addressable audience asking these questions in AI search."/>
+    <Kpi label="ACKO Volume Reach" value={fmtNum(vrA)} caption={vrCaption} isAcko sparkSeed={5} sparkTrend={vrDeltaDir||"flat"} delta={vrDelta} deltaDir={vrDeltaDir} info="Monthly search volume of prompts where ACKO is mentioned. Shows how much of the total AI search audience is actually seeing ACKO in answers."/>
+    <Kpi label="Top Competitor" value={topA?topA.name:k.topCompetitor.value} caption={topA?topA.sov+'% SoV':k.topCompetitor.caption} sparkSeed={6} sparkTrend={topDeltaDir||"flat"} delta={topDelta?topDelta+'pp':null} deltaDir={topDeltaDir} info="The brand with the highest Share of Voice across all tracked prompts. This is the dominant player ACKO is competing against in AI responses."/>
   </div>;
 }
 
@@ -1629,7 +1718,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </body>
 </html>'''
 
-html = html_template.replace('GEO_DATA_PLACEHOLDER', geo_data_json).replace('SOV_HISTORY_PLACEHOLDER', sov_history_weekly_json)
+html = html_template.replace('GEO_DATA_PLACEHOLDER', geo_data_json).replace('SOV_HISTORY_PLACEHOLDER', sov_history_weekly_json).replace('KPI_HISTORY_PLACEHOLDER', kpi_history_json)
 
 with open("index.html", "w") as f:
     f.write(html)
