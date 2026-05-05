@@ -22,5 +22,13 @@
     "cited_total": 100,
     "total_volume": 68364,
     "volume_reach": 15236
+  },
+  "2026-05-05": {
+    "mentioned_count": 11,
+    "mentioned_total": 101,
+    "cited_count": 25,
+    "cited_total": 101,
+    "total_volume": 35777,
+    "volume_reach": 2113
   }
 }
