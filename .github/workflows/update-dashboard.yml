@@ -1,10 +1,19 @@
 name: Update GEO Dashboard
 
-# Runs every Monday at 6:00 AM IST (00:30 UTC)
+# Runs daily at 6:00 AM IST (00:30 UTC) — smart-check skips if data unchanged
 on:
   schedule:
-    - cron: '30 0 * * 1'
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: 'Force full refresh even if data unchanged'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   update:
@@ -29,6 +38,7 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           DASHBOARD_URL: "https://aloke-acko.github.io/acko-geo-dashboard/"
+          FORCE_REFRESH: ${{ github.event.inputs.force_refresh || 'false' }}
         run: python generate_dashboard.py
       - name: Commit and push
         run: |
@@ -55,7 +65,7 @@ jobs:
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.SMTP_USER }}
           body: |
-            The weekly GEO Dashboard update failed.
+            The daily GEO Dashboard update failed.
 
             Workflow: ${{ github.workflow }}
             Run ID: ${{ github.run_id }}
