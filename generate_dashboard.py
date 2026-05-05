@@ -1424,11 +1424,14 @@ function KpiGrid() {
   // ─── Helper: get KPI snapshot for a date (from KPI_HISTORY) ───
   const getKpi = (date) => {
     if(!date || !window.KPI_HISTORY) return null;
-    // Find exact match or closest earlier date
     if(window.KPI_HISTORY[date]) return window.KPI_HISTORY[date];
     const dates = Object.keys(window.KPI_HISTORY).sort();
+    // Try closest earlier date first
     const earlier = dates.filter(d => d <= date);
-    return earlier.length ? window.KPI_HISTORY[earlier[earlier.length-1]] : null;
+    if(earlier.length) return window.KPI_HISTORY[earlier[earlier.length-1]];
+    // If no earlier date exists, use closest later date
+    const later = dates.filter(d => d > date);
+    return later.length ? window.KPI_HISTORY[later[0]] : null;
   };
   const kpiA = getKpi(periodA);
   const kpiB = comparing ? getKpi(periodB) : null;
