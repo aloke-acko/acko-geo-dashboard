@@ -31,5 +31,41 @@
     "cited_total": 100,
     "total_volume": 35777,
     "volume_reach": 2113
+  },
+  "2026-04-19": {
+    "sov": 49.4,
+    "mentioned_count": 24,
+    "mentioned_total": 100,
+    "cited_count": 46,
+    "cited_total": 100,
+    "total_volume": 68186,
+    "volume_reach": 16745
+  },
+  "2026-04-26": {
+    "sov": 43.6,
+    "mentioned_count": 16,
+    "mentioned_total": 100,
+    "cited_count": 39,
+    "cited_total": 100,
+    "total_volume": 68324,
+    "volume_reach": 15766
+  },
+  "2026-05-03": {
+    "sov": 43.6,
+    "mentioned_count": 16,
+    "mentioned_total": 100,
+    "cited_count": 39,
+    "cited_total": 100,
+    "total_volume": 68324,
+    "volume_reach": 15766
+  },
+  "2026-05-06": {
+    "sov": 11.9,
+    "mentioned_count": 11,
+    "mentioned_total": 100,
+    "cited_count": 25,
+    "cited_total": 100,
+    "total_volume": 35777,
+    "volume_reach": 2113
   }
 }
