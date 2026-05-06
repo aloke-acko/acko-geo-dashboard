@@ -1290,17 +1290,15 @@ function fmtNum(n) { return typeof n === 'number' ? n.toLocaleString('en-US') : 
 function fmtCompact(n) { return n >= 1000 ? (n/1000).toFixed(n >= 10000 ? 0 : 1).replace(/\\.0$/, '') + 'k' : String(n); }
 
 // ─── SPARKLINE ───
-function Sparkline({ seed = 1, color = 'var(--acko-400)', width = 80, height = 26, trend = 'up' }) {
+function Sparkline({ data, color = 'var(--acko-400)', width = 80, height = 26, seed = 1 }) {
   const points = useMemo(() => {
-    const arr = []; let v = 0.5;
-    for (let i = 0; i < 16; i++) {
-      const drift = trend === 'up' ? 0.025 : trend === 'down' ? -0.025 : 0;
-      const noise = (Math.sin((i+seed)*1.7)*0.5 + Math.sin((i+seed)*0.7)*0.5) * 0.18;
-      v = Math.max(0.05, Math.min(0.95, v + drift + noise * 0.3));
-      arr.push(v);
-    }
-    return arr;
-  }, [seed, trend]);
+    if (!data || data.length === 0) return [0.5, 0.5];
+    if (data.length === 1) return [data[0], data[0]];
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+    return data.map(v => (v - min) / range);
+  }, [data]);
   const pts = points.map((v,i) => [(i/(points.length-1))*width, height - v*(height-4) - 2]);
   const d = pts.map((p,i) => (i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
   const fillD = d + ` L ${width},${height} L 0,${height} Z`;
@@ -1401,14 +1399,14 @@ function InfoTip({text}) {
 }
 
 // ─── KPI ───
-function Kpi({ label, value, caption, isAcko, sparkSeed, sparkTrend, delta, deltaDir, info }) {
+function Kpi({ label, value, caption, isAcko, sparkData, sparkSeed, delta, deltaDir, info }) {
   const valNode = typeof value === 'string' && value.includes('%')
     ? <>{value.replace('%','')}<span className="unit">%</span></> : value;
   const isText = typeof value === 'string' && (value.includes('/') || /[A-Za-z]/.test(value));
   return <div className={'kpi '+(isAcko?'acko':'')}>
     <div className="kpi-label">{isAcko && <span className="dot"/>}{label}{info && <InfoTip text={info}/>}</div>
     <div className={'kpi-value '+(isText?'text':'')}>{valNode}</div>
-    <Sparkline seed={sparkSeed} trend={sparkTrend} color={isAcko?'var(--acko-400)':'var(--info)'}/>
+    <Sparkline data={sparkData} seed={sparkSeed||1} color={isAcko?'var(--acko-400)':'var(--info)'}/>
     <div className="kpi-caption"><span>{caption}</span>
       {delta && <span className={'kpi-delta '+(deltaDir==='up'?'up':'down')}>{deltaDir==='up'?<Icon.Up/>:<Icon.Down/>}{delta}</span>}
     </div>
@@ -1498,13 +1496,36 @@ function KpiGrid() {
   const topDelta = comparing && topA && topB ? (parseFloat(topA.sov) - parseFloat(topB.sov)).toFixed(1) : null;
   const topDeltaDir = topDelta > 0 ? 'up' : topDelta < 0 ? 'down' : null;
 
+  // ─── Build sparkline data from real history ───
+  const buildSparkData = (extractor) => {
+    const sovDates = Object.keys(window.SOV_HISTORY || {});
+    const kpiDates = Object.keys(window.KPI_HISTORY || {});
+    const allDates = [...new Set([...sovDates, ...kpiDates])].sort();
+    return allDates.map(d => extractor(d)).filter(v => v !== null && v !== undefined);
+  };
+
+  const sparkSov = buildSparkData(d => {
+    if(window.SOV_HISTORY[d] && window.SOV_HISTORY[d]["Acko"] !== undefined) return window.SOV_HISTORY[d]["Acko"];
+    const kpi = window.KPI_HISTORY[d];
+    return kpi && kpi.sov !== undefined ? kpi.sov : null;
+  });
+  const sparkMent = buildSparkData(d => { const kpi = window.KPI_HISTORY[d]; return kpi ? kpi.mentioned_count : null; });
+  const sparkCite = buildSparkData(d => { const kpi = window.KPI_HISTORY[d]; return kpi ? kpi.cited_count : null; });
+  const sparkVol = buildSparkData(d => { const kpi = window.KPI_HISTORY[d]; return kpi ? kpi.total_volume : null; });
+  const sparkVr = buildSparkData(d => { const kpi = window.KPI_HISTORY[d]; return kpi ? kpi.volume_reach : null; });
+  const sparkTopComp = buildSparkData(d => {
+    if(!window.SOV_HISTORY[d]) return null;
+    const sorted = Object.entries(window.SOV_HISTORY[d]).sort((a,b)=>b[1]-a[1]);
+    return sorted.length ? sorted[0][1] : null;
+  });
+
   return <div className="kpi-grid">
-    <Kpi label="ACKO Share of Voice" value={sovA.toFixed?sovA.toFixed(1)+'%':sovA+'%'} caption={sovCaption} isAcko sparkSeed={1} sparkTrend={sovDeltaDir||"flat"} delta={sovDelta?sovDelta+'pp':null} deltaDir={sovDeltaDir} info="Percentage of all AI-generated responses (across tracked prompts) where ACKO appears, relative to all brand appearances. Higher SoV = ACKO dominates more AI conversations."/>
-    <Kpi label="ACKO Mentioned" value={mentVal} caption={mentCaption} isAcko sparkSeed={2} sparkTrend={mentDeltaDir||"flat"} delta={mentDelta} deltaDir={mentDeltaDir} info="Number of tracked AI prompts where 'ACKO' is explicitly named in the response text. Format: mentioned / total prompts tracked."/>
-    <Kpi label="ACKO Cited" value={citeVal} caption={citeCaption} isAcko sparkSeed={3} sparkTrend={citeDeltaDir||"flat"} delta={citeDelta} deltaDir={citeDeltaDir} info="Number of tracked AI prompts where acko.com is linked as a source in the response. Being cited means the AI treats ACKO's content as authoritative."/>
-    <Kpi label="Total AI Search Volume" value={fmtNum(volA)} caption={volCaption} sparkSeed={4} sparkTrend={volDeltaDir||"flat"} delta={volDelta} deltaDir={volDeltaDir} info="Combined monthly search volume of all tracked prompts. Represents the total addressable audience asking these questions in AI search."/>
-    <Kpi label="ACKO Volume Reach" value={fmtNum(vrA)} caption={vrCaption} isAcko sparkSeed={5} sparkTrend={vrDeltaDir||"flat"} delta={vrDelta} deltaDir={vrDeltaDir} info="Monthly search volume of prompts where ACKO is mentioned. Shows how much of the total AI search audience is actually seeing ACKO in answers."/>
-    <Kpi label="Top Competitor" value={topA?topA.name:k.topCompetitor.value} caption={topA?topA.sov+'% SoV':k.topCompetitor.caption} sparkSeed={6} sparkTrend={topDeltaDir||"flat"} delta={topDelta?topDelta+'pp':null} deltaDir={topDeltaDir} info="The brand with the highest Share of Voice across all tracked prompts. This is the dominant player ACKO is competing against in AI responses."/>
+    <Kpi label="ACKO Share of Voice" value={sovA.toFixed?sovA.toFixed(1)+'%':sovA+'%'} caption={sovCaption} isAcko sparkData={sparkSov} sparkSeed={1} delta={sovDelta?sovDelta+'pp':null} deltaDir={sovDeltaDir} info="Percentage of all AI-generated responses (across tracked prompts) where ACKO appears, relative to all brand appearances. Higher SoV = ACKO dominates more AI conversations."/>
+    <Kpi label="ACKO Mentioned" value={mentVal} caption={mentCaption} isAcko sparkData={sparkMent} sparkSeed={2} delta={mentDelta} deltaDir={mentDeltaDir} info="Number of tracked AI prompts where 'ACKO' is explicitly named in the response text. Format: mentioned / total prompts tracked."/>
+    <Kpi label="ACKO Cited" value={citeVal} caption={citeCaption} isAcko sparkData={sparkCite} sparkSeed={3} delta={citeDelta} deltaDir={citeDeltaDir} info="Number of tracked AI prompts where acko.com is linked as a source in the response. Being cited means the AI treats ACKO's content as authoritative."/>
+    <Kpi label="Total AI Search Volume" value={fmtNum(volA)} caption={volCaption} sparkData={sparkVol} sparkSeed={4} delta={volDelta} deltaDir={volDeltaDir} info="Combined monthly search volume of all tracked prompts. Represents the total addressable audience asking these questions in AI search."/>
+    <Kpi label="ACKO Volume Reach" value={fmtNum(vrA)} caption={vrCaption} isAcko sparkData={sparkVr} sparkSeed={5} delta={vrDelta} deltaDir={vrDeltaDir} info="Monthly search volume of prompts where ACKO is mentioned. Shows how much of the total AI search audience is actually seeing ACKO in answers."/>
+    <Kpi label="Top Competitor" value={topA?topA.name:k.topCompetitor.value} caption={topA?topA.sov+'% SoV':k.topCompetitor.caption} sparkData={sparkTopComp} sparkSeed={6} delta={topDelta?topDelta+'pp':null} deltaDir={topDeltaDir} info="The brand with the highest Share of Voice across all tracked prompts. This is the dominant player ACKO is competing against in AI responses."/>
   </div>;
 }
 
