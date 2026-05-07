@@ -178,9 +178,14 @@ for r in ai_responses:
     acko_cited = any("acko.com" in (l.get("url", "")).lower() for l in links)
     acko_mentioned = "acko" in resp_text.lower()
     brands_found = [b for b in BRAND_LIST if b.lower() in resp_text.lower()]
+    # Truncate response for embedding (keep first 2000 chars)
+    resp_trunc = resp_text[:2000] + ("…" if len(resp_text) > 2000 else "")
+    # Extract cited page info (url + title)
+    cited_links = [{"url": l.get("url",""), "title": l.get("title","")} for l in links if l.get("url")]
     questions_raw.append({
         "q": q, "vol": vol, "m": acko_mentioned, "c": acko_cited,
-        "b": ", ".join(brands_found), "bc": len(brands_found)
+        "b": ", ".join(brands_found), "bc": len(brands_found),
+        "resp": resp_trunc, "links": cited_links
     })
 
 # Deduplicate: keep one entry per unique prompt, prefer mentioned/cited=True
@@ -276,7 +281,9 @@ prompts_list = [{
     "vol": q["vol"],
     "mentioned": q["m"],
     "cited": q["c"],
-    "brands": [b.strip() for b in q["b"].split(", ") if b.strip()] if q["b"] else []
+    "brands": [b.strip() for b in q["b"].split(", ") if b.strip()] if q["b"] else [],
+    "response": q.get("resp", ""),
+    "citedPages": q.get("links", [])
 } for q in questions]
 
 # Gap analysis: top 15 missing
@@ -436,6 +443,7 @@ html_template = '''<!DOCTYPE html>
   --acko-700: #5734d4;
   --acko-800: #4527a8;
   --acko-900: #2f1c75;
+  --acko-orange: #FF6B00;
 
   /* Neutrals — deep ink */
   --ink-0:  #06060c;
@@ -1106,7 +1114,7 @@ html, body {
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 .drawer {
-  width: min(560px, 100%); height: 100%;
+  width: min(780px, 65%); height: 100%;
   background: var(--surface);
   border-left: 1px solid var(--border-strong);
   overflow-y: auto;
@@ -1138,6 +1146,38 @@ html, body {
   font-family: var(--font-display); font-size: 24px; font-weight: 600; margin-top: 6px;
   letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
 }
+.drawer-response-wrap {
+  display: grid; grid-template-columns: 1fr 280px; gap: 0;
+  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  min-height: 200px;
+}
+@media (max-width: 700px) { .drawer-response-wrap { grid-template-columns: 1fr; } }
+.drawer-response {
+  padding: 18px 20px; font-size: 13px; line-height: 1.75; color: var(--fg-2);
+  white-space: pre-wrap; word-break: break-word; max-height: 480px; overflow-y: auto;
+  background: var(--surface-2);
+}
+.drawer-response::-webkit-scrollbar { width: 5px; }
+.drawer-response::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+.drawer-cited-sidebar {
+  padding: 16px 18px; border-left: 1px solid var(--border);
+  background: var(--surface); overflow-y: auto; max-height: 480px;
+}
+.drawer-cited-sidebar h4 {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--fg-3); font-weight: 600; margin: 0 0 12px 0;
+}
+.cited-link {
+  display: block; padding: 10px 12px; margin-bottom: 8px;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  text-decoration: none; font-size: 12px; line-height: 1.45; transition: border-color .15s;
+}
+.cited-link:hover { border-color: var(--accent); }
+.cited-link .cited-title { color: var(--fg-2); display: block; margin-bottom: 4px; font-weight: 500; }
+.cited-link .cited-url { color: var(--fg-4); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.cited-link.acko-link { border-color: var(--acko-orange, #FF6B00); }
+.cited-link.acko-link .cited-url { color: var(--acko-orange, #FF6B00); }
+.drawer-no-response { padding: 30px; text-align: center; color: var(--fg-4); font-size: 13px; font-style: italic; }
 
 /* =========================================================================
    GAP ANALYSIS — quadrant
@@ -1598,6 +1638,11 @@ function AckoPagesCard() {
 // ─── PROMPTS ───
 function PromptDrawer({ row, onClose }) {
   if (!row) return null;
+  const resp = row.response || '';
+  const links = row.citedPages || [];
+  const ackoLinks = links.filter(l => l.url.toLowerCase().includes('acko.com'));
+  const otherLinks = links.filter(l => !l.url.toLowerCase().includes('acko.com'));
+  const sortedLinks = [...ackoLinks, ...otherLinks];
   return <div className="drawer-overlay" onClick={onClose}><div className="drawer" onClick={e=>e.stopPropagation()}>
     <div className="drawer-head"><div><div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.12em',color:'var(--fg-3)',fontWeight:600,marginBottom:8}}>Prompt detail</div><h3>{row.prompt}</h3></div><button className="close" onClick={onClose}><Icon.X/></button></div>
     <div className="drawer-body">
@@ -1616,6 +1661,18 @@ function PromptDrawer({ row, onClose }) {
           {!row.mentioned&&row.cited&&<span style={{color:'var(--warn)'}}>◐ ACKO is cited but not mentioned by name.</span>}
           {row.mentioned&&!row.cited&&<span style={{color:'var(--warn)'}}>◐ ACKO is mentioned but not cited as a source.</span>}
         </div>
+      </div>
+      <div><div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.12em',color:'var(--fg-3)',fontWeight:600,marginBottom:10}}>ChatGPT response {links.length>0&&<span style={{fontWeight:400,color:'var(--fg-4)',textTransform:'none',letterSpacing:0,fontSize:11,marginLeft:6}}>{links.length} source{links.length!==1?'s':''} cited</span>}</div>
+        {resp ? <div className="drawer-response-wrap">
+          <div className="drawer-response">{resp}</div>
+          {links.length>0 && <div className="drawer-cited-sidebar">
+            <h4>Cited pages ({links.length})</h4>
+            {sortedLinks.map((l,i)=><a key={i} className={'cited-link'+(l.url.toLowerCase().includes('acko.com')?' acko-link':'')} href={l.url} target="_blank" rel="noopener noreferrer">
+              <span className="cited-title">{l.title||'Untitled'}</span>
+              <span className="cited-url">{l.url}</span>
+            </a>)}
+          </div>}
+        </div> : <div className="drawer-no-response">Response data not available for this prompt.</div>}
       </div>
     </div>
   </div></div>;
