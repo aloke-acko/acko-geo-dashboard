@@ -103,5 +103,14 @@
     "cited_total": 100,
     "total_volume": 33760,
     "volume_reach": 1464
+  },
+  "2026-05-11": {
+    "sov": 9.0,
+    "mentioned_count": 14,
+    "mentioned_total": 100,
+    "cited_count": 26,
+    "cited_total": 100,
+    "total_volume": 33189,
+    "volume_reach": 1894
   }
 }
