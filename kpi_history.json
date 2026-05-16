@@ -148,5 +148,14 @@
     "cited_total": 100,
     "total_volume": 78828,
     "volume_reach": 13949
+  },
+  "2026-05-16": {
+    "sov": 29.1,
+    "mentioned_count": 20,
+    "mentioned_total": 100,
+    "cited_count": 32,
+    "cited_total": 100,
+    "total_volume": 78828,
+    "volume_reach": 13949
   }
 }
