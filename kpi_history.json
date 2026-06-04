@@ -319,5 +319,14 @@
     "cited_total": 99,
     "total_volume": 12868,
     "volume_reach": 0
+  },
+  "2026-06-04": {
+    "sov": 22.5,
+    "mentioned_count": 0,
+    "mentioned_total": 99,
+    "cited_count": 29,
+    "cited_total": 99,
+    "total_volume": 14383,
+    "volume_reach": 0
   }
 }
