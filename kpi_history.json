@@ -409,5 +409,14 @@
     "cited_total": 100,
     "total_volume": 14904,
     "volume_reach": 0
+  },
+  "2026-06-14": {
+    "sov": 10.0,
+    "mentioned_count": 0,
+    "mentioned_total": 100,
+    "cited_count": 28,
+    "cited_total": 100,
+    "total_volume": 14904,
+    "volume_reach": 0
   }
 }
