@@ -724,5 +724,14 @@
     "cited_total": 101,
     "total_volume": 1670,
     "volume_reach": 0
+  },
+  "2026-07-20": {
+    "sov": 7.3,
+    "mentioned_count": 0,
+    "mentioned_total": 101,
+    "cited_count": 29,
+    "cited_total": 101,
+    "total_volume": 1670,
+    "volume_reach": 0
   }
 }
