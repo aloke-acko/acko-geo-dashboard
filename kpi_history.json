@@ -877,5 +877,14 @@
     "cited_total": 101,
     "total_volume": 1670,
     "volume_reach": 190
+  },
+  "2026-08-06": {
+    "sov": 15.7,
+    "mentioned_count": 14,
+    "mentioned_total": 101,
+    "cited_count": 29,
+    "cited_total": 101,
+    "total_volume": 1670,
+    "volume_reach": 180
   }
 }
