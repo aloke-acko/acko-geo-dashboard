@@ -904,5 +904,14 @@
     "cited_total": 101,
     "total_volume": 1580,
     "volume_reach": 170
+  },
+  "2026-08-09": {
+    "sov": 10.8,
+    "mentioned_count": 8,
+    "mentioned_total": 101,
+    "cited_count": 27,
+    "cited_total": 101,
+    "total_volume": 1580,
+    "volume_reach": 130
   }
 }
