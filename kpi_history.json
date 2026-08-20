@@ -1003,5 +1003,14 @@
     "cited_total": 101,
     "total_volume": 1640,
     "volume_reach": 40
+  },
+  "2026-08-20": {
+    "sov": 10.1,
+    "mentioned_count": 3,
+    "mentioned_total": 101,
+    "cited_count": 6,
+    "cited_total": 101,
+    "total_volume": 1640,
+    "volume_reach": 40
   }
 }
